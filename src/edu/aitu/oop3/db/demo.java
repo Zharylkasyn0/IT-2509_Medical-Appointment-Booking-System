@@ -15,7 +15,7 @@ public class demo{
 
             createTableIfNeeded(connection);
             insertUser(connection, "Alice", "alice@example.com");
-            insertUser(connection, "Bob", "bob@example.com");
+            insertUser(connection, "Bob", "bob@example.");
 
             printAllUsers(connection);
 
