@@ -1,7 +1,5 @@
 package edu.aitu.oop3.db;
 
-import java.sql.Connection;
-import java.sql.Statement;
 import java.time.LocalDateTime;
 
 public class Main {
@@ -9,51 +7,72 @@ public class Main {
         System.out.println("Starting Medical System...");
 
         try {
-            // 1. Инициализируем компоненты (SOLID)
+            // 1. Инициализируем компоненты
             AppointmentRepository repo = new JdbcAppointmentRepository();
             DoctorAvailabilityService availabilityService = new DoctorAvailabilityService(repo);
             AppointmentService appointmentService = new AppointmentService(repo, availabilityService);
 
-            // 2. Подготовка данных прямо из кода (чтобы не заходить в Supabase)
-            prepareDatabaseData();
+            // 2. Проверяем подключение к БД и выводим информацию
+            checkDatabaseConnection();
 
-            // 3. Создаем объект бронирования
-            // Мы используем id доктора = 1 и id пациента = 101
+            // 3. Пытаемся забронировать
+            System.out.println("\nAttempting to book appointment...");
+
+            // Создаем объект записи
             Appointment myApp = new Appointment(
-                    0, // id (база сама назначит)
-                    1, // doctor_id
-                    101, // patient_id
-                    LocalDateTime.now().plusDays(2), // Время: через 2 дня
+                    0, // id - будет сгенерирован базой
+                    1, // doctor_id (должен существовать в таблице doctors)
+                    101, // patient_id (должен существовать в таблице patients)
+                    LocalDateTime.now().plusDays(2).withHour(10).withMinute(0).withSecond(0).withNano(0),
                     "SCHEDULED"
             );
 
             // 4. Пытаемся забронировать через сервис
-            System.out.println("Attempting to book appointment...");
             appointmentService.bookAppointment(myApp);
 
-            System.out.println("--- SUCCESS! ---");
-            System.out.println("Appointment booked for patient 101 with doctor 1.");
+            System.out.println("--- SUCCESS! Appointment booked. ---");
+            System.out.println("Details:");
+            System.out.println("  Doctor ID: " + myApp.getDoctorId());
+            System.out.println("  Patient ID: " + myApp.getPatientId());
+            System.out.println("  Time: " + myApp.getAppointmentTime());
+            System.out.println("  Status: " + myApp.getStatus());
 
+        } catch (AppointmentException e) {
+            System.out.println("\n Business error: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Execution failed:");
+            System.out.println("\n System error: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    // Метод, который записывает доктора и пациента в базу, если их там нет
-    private static void prepareDatabaseData() throws java.sql.SQLException {
-        try (Connection conn = DatabaseConnection.getConnection();
-             Statement stmt = conn.createStatement()) {
+    private static void checkDatabaseConnection() {
+        try {
+            System.out.println("Checking database connection to Supabase...");
+            var conn = DatabaseConnection.getConnection();
 
-            // Добавляем доктора (id=1)
-            stmt.executeUpdate("INSERT INTO doctors (id, name, specialization) " +
-                    "VALUES (1, 'Dr. House', 'Diagnostics') ON CONFLICT (id) DO NOTHING");
+            // Проверяем существование таблиц
+            var metaData = conn.getMetaData();
+            var tables = metaData.getTables(null, null, "%", new String[]{"TABLE"});
 
-            // Добавляем пациента (id=101)
-            stmt.executeUpdate("INSERT INTO patients (id, name, email) " +
-                    "VALUES (101, 'Adil', 'adil@example.com') ON CONFLICT (id) DO NOTHING");
+            System.out.println("Connected to Supabase successfully!");
+            System.out.println("Available tables:");
 
-            System.out.println("Initial data (Doctor/Patient) is ready.");
+            int tableCount = 0;
+            while (tables.next()) {
+                String tableName = tables.getString("TABLE_NAME");
+                System.out.println("  - " + tableName);
+                tableCount++;
+            }
+
+            if (tableCount == 0) {
+                System.out.println("Warning: No tables found in database!");
+            }
+
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println("Database connection error: " + e.getMessage());
+            throw new RuntimeException("Cannot connect to database", e);
         }
     }
 }
