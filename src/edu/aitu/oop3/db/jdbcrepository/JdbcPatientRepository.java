@@ -1,5 +1,6 @@
 package edu.aitu.oop3.db.jdbcrepository;
 
+import edu.aitu.oop3.db.DatabaseConnection;
 import edu.aitu.oop3.db.entities.Patient;
 import edu.aitu.oop3.db.repository.PatientRepository;
 import java.sql.*;

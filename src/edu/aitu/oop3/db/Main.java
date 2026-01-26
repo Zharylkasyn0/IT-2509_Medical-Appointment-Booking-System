@@ -59,7 +59,7 @@ public class Main {
 
             // Проверяем существование таблиц
             var metaData = conn.getMetaData();
-            var tables = metaData.getTables(null, null, "%", new String[]{"TABLE"});
+            var tables = metaData.getTables(null,  "public", "%", new String[]{"TABLE"});
 
             System.out.println("Connected to Supabase successfully!");
             System.out.println("Available tables:");
