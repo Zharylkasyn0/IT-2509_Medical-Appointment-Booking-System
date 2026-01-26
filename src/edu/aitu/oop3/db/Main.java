@@ -123,7 +123,7 @@ public class Main {
                 .withHour(hour)
                 .withMinute(minute)
                 .withSecond(0)
-                .withNano(0);
+                .withNano(0);//545
 
         // Создаем объект
         Appointment newApp = new Appointment(0, docId, patId, appointmentTime, "SCHEDULED");
