@@ -12,6 +12,6 @@ public class DatabaseConnection {
 
     // Указываем java.sql.Connection явно, чтобы не было путаницы
     public static java.sql.Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        return DriverManager.getConnection(URL, USER, PASSWORD);//bcvhcc
     }
 }
