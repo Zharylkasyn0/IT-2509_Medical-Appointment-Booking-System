@@ -1,32 +1,48 @@
 package edu.aitu.oop3.db.servise;
+
 import edu.aitu.oop3.db.entities.Appointment;
+import edu.aitu.oop3.db.entities.Doctor;
+import edu.aitu.oop3.db.entities.Patient;
 import edu.aitu.oop3.db.exeption.AppointmentException;
 import edu.aitu.oop3.db.exeption.TimeSlotOccupiedException;
 import edu.aitu.oop3.db.repository.AppointmentRepository;
+import edu.aitu.oop3.db.repository.DoctorRepository;
+import edu.aitu.oop3.db.repository.PatientRepository;
 
 import java.sql.SQLException;
-// Обновите класс AppointmentService
+
 public class AppointmentService {
     private final AppointmentRepository appointmentRepo;
     private final DoctorAvailabilityService availabilityService;
+    private final DoctorRepository doctorRepo; // Добавлено
+    private final PatientRepository patientRepo; // Добавлено
 
     public AppointmentService(AppointmentRepository appointmentRepo,
-                              DoctorAvailabilityService availabilityService) {
+                              DoctorAvailabilityService availabilityService,
+                              DoctorRepository doctorRepo,
+                              PatientRepository patientRepo) {
         this.appointmentRepo = appointmentRepo;
         this.availabilityService = availabilityService;
+        this.doctorRepo = doctorRepo;
+        this.patientRepo = patientRepo;
+    }
+
+    public void addDoctor(Doctor doctor) throws SQLException {
+        doctorRepo.save(doctor);
+    }
+
+    public void addPatient(Patient patient) throws SQLException {
+        patientRepo.save(patient);
     }
 
     public void bookAppointment(Appointment app) throws SQLException, AppointmentException {
         if (!availabilityService.isAvailable(app.getDoctorId(), app.getAppointmentTime())) {
-            throw new TimeSlotOccupiedException(); // [cite: 54]
+            throw new TimeSlotOccupiedException();
         }
-        appointmentRepo.save(app); // [cite: 55]
+        appointmentRepo.save(app);
     }
 
-    // НОВЫЙ МЕТОД: Отмена записи
     public void cancelAppointment(int appointmentId) throws SQLException, AppointmentException {
-        // Логика отмены через репозиторий
         appointmentRepo.updateStatus(appointmentId, "CANCELLED");
-        System.out.println("Appointment " + appointmentId + " has been cancelled.");
     }
 }

@@ -1,11 +1,12 @@
 package edu.aitu.oop3.db;
 
 import edu.aitu.oop3.db.entities.Appointment;
+import edu.aitu.oop3.db.entities.Doctor;
+import edu.aitu.oop3.db.entities.Patient;
 import edu.aitu.oop3.db.exeption.AppointmentException;
-import edu.aitu.oop3.db.jdbcrepository.JdbcAppointmentRepository;
-import edu.aitu.oop3.db.repository.AppointmentRepository;
-import edu.aitu.oop3.db.servise.AppointmentService;
-import edu.aitu.oop3.db.servise.DoctorAvailabilityService;
+import edu.aitu.oop3.db.jdbcrepository.*;
+import edu.aitu.oop3.db.repository.*;
+import edu.aitu.oop3.db.servise.*;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -13,26 +14,27 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    // Сканер для ввода данных
     private static final Scanner scanner = new Scanner(System.in);
-
-    // Сервисы объявляем здесь, чтобы они были доступны во всех методах
     private static AppointmentRepository repo;
     private static AppointmentService appointmentService;
     private static DoctorAvailabilityService availabilityService;
 
     public static void main(String[] args) {
         try {
-            // 1. Инициализация (подключение к базе происходит автоматически при первом запросе)
+            // Инициализируем все 3 репозитория
             repo = new JdbcAppointmentRepository();
+            DoctorRepository docRepo = new JdbcDoctorRepository();
+            PatientRepository patRepo = new JdbcPatientRepository();
+
             availabilityService = new DoctorAvailabilityService(repo);
-            appointmentService = new AppointmentService(repo, availabilityService);
 
-            // 2. Запуск меню
+            // ПЕРЕДАЕМ ВСЕ 4 АРГУМЕНТА (исправляет ошибку в Main)
+            appointmentService = new AppointmentService(repo, availabilityService, docRepo, patRepo);
+
             runMenu();
-
         } catch (Exception e) {
             System.out.println("Критическая ошибка запуска: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -42,103 +44,77 @@ public class Main {
             System.out.println("1. Показать расписание врача");
             System.out.println("2. Записаться на прием (Book)");
             System.out.println("3. Отменить запись (Cancel)");
-            System.out.println("4. Выход");
+            System.out.println("4. Добавить нового врача");
+            System.out.println("5. Зарегистрировать пациента");
+            System.out.println("6. Выход");
             System.out.print("Выбери пункт: ");
 
-            // Проверка на корректный ввод числа
             if (!scanner.hasNextInt()) {
                 System.out.println("Ошибка: Введите число!");
-                scanner.next(); // очистка буфера
+                scanner.next();
                 continue;
             }
 
             int choice = scanner.nextInt();
-
             try {
                 switch (choice) {
-                    case 1:
-                        showDoctorSchedule();
-                        break;
-                    case 2:
-                        bookAppointment();
-                        break;
-                    case 3:
-                        cancelAppointment();
-                        break;
-                    case 4:
-                        System.out.println("Выход из программы...");
-                        return; // Завершает метод и программу
-                    default:
-                        System.out.println("Неверный выбор. Попробуйте снова.");
+                    case 1 -> showDoctorSchedule();
+                    case 2 -> bookAppointment();
+                    case 3 -> cancelAppointment();
+                    case 4 -> addNewDoctor();
+                    case 5 -> addNewPatient();
+                    case 6 -> { System.out.println("Выход..."); return; }
+                    default -> System.out.println("Неверный выбор.");
                 }
-            } catch (SQLException | AppointmentException e) {
-                System.out.println("\n>>> ОШИБКА ОПЕРАЦИИ: " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("\n>>> СИСТЕМНАЯ ОШИБКА: " + e.getMessage());
+                System.out.println("\n>>> ОШИБКА: " + e.getMessage());
             }
         }
     }
 
-    // --- МЕТОДЫ МЕНЮ ---
-
+    // ТВОИ МЕТОДЫ СОХРАНЕНЫ
     private static void showDoctorSchedule() throws SQLException {
-        System.out.print("Введите ID врача (например, 1): ");
+        System.out.print("Введите ID врача: ");
         int docId = scanner.nextInt();
-
         List<Appointment> list = repo.findByDoctorId(docId);
-
         if (list.isEmpty()) {
-            System.out.println("У этого врача нет записей или врача не существует.");
+            System.out.println("Записей нет.");
         } else {
-            System.out.println("\n--- РАСПИСАНИЕ ВРАЧА " + docId + " ---");
             for (Appointment app : list) {
-                System.out.println("ID записи: " + app.getId() +
-                        " | Пациент: " + app.getPatientId() +
-                        " | Время: " + app.getAppointmentTime() +
-                        " | Статус: " + app.getStatus());
+                System.out.println("ID: " + app.getId() + " | Время: " + app.getAppointmentTime());
             }
         }
     }
 
     private static void bookAppointment() throws SQLException, AppointmentException {
-        System.out.println("\n--- НОВАЯ ЗАПИСЬ ---");
+        System.out.print("ID врача: "); int dId = scanner.nextInt();
+        System.out.print("ID пациента: "); int pId = scanner.nextInt();
+        System.out.print("Час (0-23): "); int h = scanner.nextInt();
+        System.out.print("Минута (0-59): "); int m = scanner.nextInt();
 
-        System.out.print("ID врача: ");
-        int docId = scanner.nextInt();
-
-        System.out.print("ID пациента: ");
-        int patId = scanner.nextInt();
-
-        // Упрощенный ввод времени (например, запись на завтра)
-        System.out.println("Введите время записи (на завтра):");
-        System.out.print("Час (0-23): ");
-        int hour = scanner.nextInt();
-
-        System.out.print("Минута (0-59): ");
-        int minute = scanner.nextInt();
-
-        // Формируем дату: берем завтрашний день + введенное время
-        LocalDateTime appointmentTime = LocalDateTime.now()
-                .plusDays(1)
-                .withHour(hour)
-                .withMinute(minute)
-                .withSecond(0)
-                .withNano(0);//545
-
-        // Создаем объект
-        Appointment newApp = new Appointment(0, docId, patId, appointmentTime, "SCHEDULED");
-
-        // Пытаемся сохранить
-        appointmentService.bookAppointment(newApp);
-
-        System.out.println(">>> УСПЕШНО! Запись создана на " + appointmentTime);
+        LocalDateTime time = LocalDateTime.now().plusDays(1).withHour(h).withMinute(m).withSecond(0).withNano(0);
+        appointmentService.bookAppointment(new Appointment(0, dId, pId, time, "SCHEDULED"));
+        System.out.println(">>> УСПЕШНО!");
     }
 
     private static void cancelAppointment() throws SQLException, AppointmentException {
-        System.out.print("Введите ID записи для отмены: ");
-        int appId = scanner.nextInt();
+        System.out.print("ID записи: ");
+        int id = scanner.nextInt();
+        appointmentService.cancelAppointment(id);
+    }
 
-        appointmentService.cancelAppointment(appId);
-        // Сообщение об успехе уже выводится внутри сервиса, но можно добавить и здесь
+    // НОВЫЕ МЕТОДЫ
+    private static void addNewDoctor() throws SQLException {
+        System.out.print("Имя врача: "); String name = scanner.next();
+        System.out.print("Специализация: "); String spec = scanner.next();
+        appointmentService.addDoctor(new Doctor(0, name, spec));
+        System.out.println("Доктор добавлен!");
+    }
+
+    private static void addNewPatient() throws SQLException {
+        System.out.print("Имя пациента: "); String name = scanner.next();
+        System.out.print("Email: "); String email = scanner.next();
+        appointmentService.addPatient(new Patient(0, name, email));
+        System.out.println("Пациент добавлен!");
     }
 }
