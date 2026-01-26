@@ -19,22 +19,19 @@ public class Main {
     private static AppointmentService appointmentService;
     private static DoctorAvailabilityService availabilityService;
 
-    public static void main(String[] args) {
+     static void main() {
         try {
-            // Инициализируем все 3 репозитория
             repo = new JdbcAppointmentRepository();
             DoctorRepository docRepo = new JdbcDoctorRepository();
             PatientRepository patRepo = new JdbcPatientRepository();
 
             availabilityService = new DoctorAvailabilityService(repo);
-
-            // ПЕРЕДАЕМ ВСЕ 4 АРГУМЕНТА (исправляет ошибку в Main)
             appointmentService = new AppointmentService(repo, availabilityService, docRepo, patRepo);
 
             runMenu();
         } catch (Exception e) {
             System.out.println("Критическая ошибка запуска: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Произошла ошибка: " + e.getMessage());
         }
     }
 
@@ -56,6 +53,8 @@ public class Main {
             }
 
             int choice = scanner.nextInt();
+            scanner.nextLine(); // ОЧИСТКА БУФЕРА
+
             try {
                 switch (choice) {
                     case 1 -> showDoctorSchedule();
@@ -72,16 +71,16 @@ public class Main {
         }
     }
 
-    // ТВОИ МЕТОДЫ СОХРАНЕНЫ
     private static void showDoctorSchedule() throws SQLException {
         System.out.print("Введите ID врача: ");
         int docId = scanner.nextInt();
+        scanner.nextLine(); // ОЧИСТКА
         List<Appointment> list = repo.findByDoctorId(docId);
         if (list.isEmpty()) {
             System.out.println("Записей нет.");
         } else {
             for (Appointment app : list) {
-                System.out.println("ID: " + app.getId() + " | Время: " + app.getAppointmentTime());
+                System.out.println("ID записи: " + app.getId() + " | Статус: " + app.getStatus() + " | Время: " + app.getAppointmentTime());
             }
         }
     }
@@ -91,6 +90,7 @@ public class Main {
         System.out.print("ID пациента: "); int pId = scanner.nextInt();
         System.out.print("Час (0-23): "); int h = scanner.nextInt();
         System.out.print("Минута (0-59): "); int m = scanner.nextInt();
+        scanner.nextLine(); // ОЧИСТКА
 
         LocalDateTime time = LocalDateTime.now().plusDays(1).withHour(h).withMinute(m).withSecond(0).withNano(0);
         appointmentService.bookAppointment(new Appointment(0, dId, pId, time, "SCHEDULED"));
@@ -98,22 +98,24 @@ public class Main {
     }
 
     private static void cancelAppointment() throws SQLException, AppointmentException {
-        System.out.print("ID записи: ");
+        System.out.print("Введите ID ЗАПИСИ (из списка расписания) для отмены: ");
         int id = scanner.nextInt();
+        scanner.nextLine(); // ОЧИСТКА
+
         appointmentService.cancelAppointment(id);
+        System.out.println("Запрос на отмену отправлен.");
     }
 
-    // НОВЫЕ МЕТОДЫ
     private static void addNewDoctor() throws SQLException {
-        System.out.print("Имя врача: "); String name = scanner.next();
-        System.out.print("Специализация: "); String spec = scanner.next();
+        System.out.print("Имя врача: "); String name = scanner.nextLine();
+        System.out.print("Специализация: "); String spec = scanner.nextLine();
         appointmentService.addDoctor(new Doctor(0, name, spec));
         System.out.println("Доктор добавлен!");
     }
 
     private static void addNewPatient() throws SQLException {
-        System.out.print("Имя пациента: "); String name = scanner.next();
-        System.out.print("Email: "); String email = scanner.next();
+        System.out.print("Имя пациента: "); String name = scanner.nextLine();
+        System.out.print("Email: "); String email = scanner.nextLine();
         appointmentService.addPatient(new Patient(0, name, email));
         System.out.println("Пациент добавлен!");
     }

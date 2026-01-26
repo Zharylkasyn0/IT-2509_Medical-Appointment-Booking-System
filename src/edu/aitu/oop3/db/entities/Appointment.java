@@ -3,11 +3,11 @@ package edu.aitu.oop3.db.entities;
 import java.time.LocalDateTime;
 
 public class Appointment {
-    private int id;
-    private int doctorId;
-    private int patientId;
-    private LocalDateTime appointmentTime;
-    private String status;
+    private final int id;
+    private final int doctorId;
+    private final int patientId;
+    private final LocalDateTime appointmentTime;
+    private final String status;
 
     // Конструктор с 5 параметрами
     public Appointment(int id, int doctorId, int patientId, LocalDateTime appointmentTime, String status) {
