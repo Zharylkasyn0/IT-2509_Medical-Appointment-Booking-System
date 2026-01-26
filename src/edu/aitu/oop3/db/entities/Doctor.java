@@ -1,5 +1,5 @@
 // Файл: edu/aitu/oop3/db/Doctor.java
-package edu.aitu.oop3.db;
+package edu.aitu.oop3.db.entities;
 
 public class Doctor {
     private int id;

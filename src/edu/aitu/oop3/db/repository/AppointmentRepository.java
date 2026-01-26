@@ -1,4 +1,6 @@
-package edu.aitu.oop3.db;
+package edu.aitu.oop3.db.repository;
+import edu.aitu.oop3.db.entities.Appointment;
+
 import java.sql.SQLException;
 import java.util.List;
 

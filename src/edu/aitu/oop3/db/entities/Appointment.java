@@ -1,4 +1,4 @@
-package edu.aitu.oop3.db;
+package edu.aitu.oop3.db.entities;
 
 import java.time.LocalDateTime;
 

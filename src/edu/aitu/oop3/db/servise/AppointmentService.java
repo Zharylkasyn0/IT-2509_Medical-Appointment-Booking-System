@@ -1,4 +1,9 @@
-package edu.aitu.oop3.db;
+package edu.aitu.oop3.db.servise;
+import edu.aitu.oop3.db.entities.Appointment;
+import edu.aitu.oop3.db.exeption.AppointmentException;
+import edu.aitu.oop3.db.exeption.TimeSlotOccupiedException;
+import edu.aitu.oop3.db.repository.AppointmentRepository;
+
 import java.sql.SQLException;
 // Обновите класс AppointmentService
 public class AppointmentService {

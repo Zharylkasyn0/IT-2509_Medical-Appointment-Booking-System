@@ -1,5 +1,8 @@
-package edu.aitu.oop3.db;
-import java.sql.*;
+package edu.aitu.oop3.db.jdbcrepository;
+import edu.aitu.oop3.db.DatabaseConnection;
+import edu.aitu.oop3.db.entities.Appointment;
+import edu.aitu.oop3.db.repository.AppointmentRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;

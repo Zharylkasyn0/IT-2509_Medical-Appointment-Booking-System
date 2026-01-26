@@ -1,4 +1,4 @@
-package edu.aitu.oop3.db;
+package edu.aitu.oop3.db.entities;
 public class Patient {
     private int id;
     private String name;

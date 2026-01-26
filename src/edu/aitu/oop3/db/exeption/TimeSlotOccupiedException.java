@@ -1,4 +1,4 @@
-package edu.aitu.oop3.db;
+package edu.aitu.oop3.db.exeption;
 
 public class TimeSlotOccupiedException extends AppointmentException {
     public TimeSlotOccupiedException() {

@@ -1,5 +1,12 @@
 package edu.aitu.oop3.db;
 
+import edu.aitu.oop3.db.entities.Appointment;
+import edu.aitu.oop3.db.exeption.AppointmentException;
+import edu.aitu.oop3.db.jdbcrepository.JdbcAppointmentRepository;
+import edu.aitu.oop3.db.repository.AppointmentRepository;
+import edu.aitu.oop3.db.servise.AppointmentService;
+import edu.aitu.oop3.db.servise.DoctorAvailabilityService;
+
 import java.time.LocalDateTime;
 
 public class Main {
