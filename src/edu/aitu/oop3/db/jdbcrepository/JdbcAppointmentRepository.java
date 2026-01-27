@@ -57,9 +57,9 @@ public class JdbcAppointmentRepository implements AppointmentRepository {
             stmt.setInt(2, appointmentId);
             int rowsAffected = stmt.executeUpdate();
 
-            // ВМЕСТО простого sout, выбрасываем созданное исключение
+
             if (rowsAffected == 0) {
-                // Теперь это будет работать правильно по SOLID
+
                 System.out.println("Error: Appointment " + appointmentId + " not found.");
             }
         }
@@ -84,7 +84,7 @@ public class JdbcAppointmentRepository implements AppointmentRepository {
         return list;
     }
 
-    // Helper method to keep code DRY (Don't Repeat Yourself)
+
     private Appointment mapResultSetToAppointment(ResultSet rs) throws SQLException {
         return new Appointment(
                 rs.getInt("id"),

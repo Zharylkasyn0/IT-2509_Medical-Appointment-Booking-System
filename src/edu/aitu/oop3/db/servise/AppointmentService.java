@@ -14,8 +14,8 @@ import java.sql.SQLException;
 public class AppointmentService {
     private final AppointmentRepository appointmentRepo;
     private final DoctorAvailabilityService availabilityService;
-    private final DoctorRepository doctorRepo; // Добавлено
-    private final PatientRepository patientRepo; // Добавлено
+    private final DoctorRepository doctorRepo;
+    private final PatientRepository patientRepo;
 
     public AppointmentService(AppointmentRepository appointmentRepo,
                               DoctorAvailabilityService availabilityService,

@@ -5,5 +5,5 @@ import java.sql.SQLException;
 
 public interface PatientRepository {
     Patient findById(int id) throws SQLException;
-    void save(Patient patient) throws SQLException; // Добавлен метод для сохранения
+    void save(Patient patient) throws SQLException;
 }

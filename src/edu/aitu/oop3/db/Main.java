@@ -53,7 +53,7 @@ public class Main {
             }
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // ОЧИСТКА БУФЕРА
+            scanner.nextLine();
 
             try {
                 switch (choice) {
@@ -74,7 +74,7 @@ public class Main {
     private static void showDoctorSchedule() throws SQLException {
         System.out.print("Введите ID врача: ");
         int docId = scanner.nextInt();
-        scanner.nextLine(); // ОЧИСТКА
+        scanner.nextLine();
         List<Appointment> list = repo.findByDoctorId(docId);
         if (list.isEmpty()) {
             System.out.println("Записей нет.");
@@ -90,7 +90,7 @@ public class Main {
         System.out.print("ID пациента: "); int pId = scanner.nextInt();
         System.out.print("Час (0-23): "); int h = scanner.nextInt();
         System.out.print("Минута (0-59): "); int m = scanner.nextInt();
-        scanner.nextLine(); // ОЧИСТКА
+        scanner.nextLine();
 
         LocalDateTime time = LocalDateTime.now().plusDays(1).withHour(h).withMinute(m).withSecond(0).withNano(0);
         appointmentService.bookAppointment(new Appointment(0, dId, pId, time, "SCHEDULED"));
@@ -100,7 +100,7 @@ public class Main {
     private static void cancelAppointment() throws SQLException, AppointmentException {
         System.out.print("Введите ID ЗАПИСИ (из списка расписания) для отмены: ");
         int id = scanner.nextInt();
-        scanner.nextLine(); // ОЧИСТКА
+        scanner.nextLine();
 
         appointmentService.cancelAppointment(id);
         System.out.println("Запрос на отмену отправлен.");

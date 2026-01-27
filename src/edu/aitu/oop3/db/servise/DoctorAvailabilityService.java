@@ -17,7 +17,7 @@ public class DoctorAvailabilityService {
     public boolean isAvailable(int doctorId, LocalDateTime time) throws SQLException {
         List<Appointment> appointments = repository.findByDoctorId(doctorId);
         for (Appointment app : appointments) {
-            // Если время совпадает и запись не отменена — врач занят
+
             if (app.getAppointmentTime().equals(time) && !"CANCELLED".equalsIgnoreCase(app.getStatus())) {
                 return false;
             }

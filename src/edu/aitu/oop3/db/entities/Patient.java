@@ -9,7 +9,7 @@ public class Patient {
         this.name = name;
         this.email = email;
     }
-    // Геттеры
+
     public int getId() { return id; }
     public String getName() { return name; }
     public String getEmail() { return email; }

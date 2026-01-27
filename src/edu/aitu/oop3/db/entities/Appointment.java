@@ -9,7 +9,6 @@ public class Appointment {
     private final LocalDateTime appointmentTime;
     private final String status;
 
-    // Конструктор с 5 параметрами
     public Appointment(int id, int doctorId, int patientId, LocalDateTime appointmentTime, String status) {
         this.id = id;
         this.doctorId = doctorId;
@@ -18,7 +17,7 @@ public class Appointment {
         this.status = status;
     }
 
-    // Геттеры
+
     public int getId() { return id; }
     public int getDoctorId() { return doctorId; }
     public int getPatientId() { return patientId; }

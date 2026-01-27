@@ -1,4 +1,3 @@
-// Файл: edu/aitu/oop3/db/Doctor.java
 package edu.aitu.oop3.db.entities;
 
 public class Doctor {
@@ -11,7 +10,7 @@ public class Doctor {
         this.name = name;
         this.specialization = specialization;
     }
-    // Геттеры
+
     public int getId() { return id; }
     public String getName() { return name; }
     public String getSpecialization() { return specialization; }
