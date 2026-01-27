@@ -1,6 +1,8 @@
 package edu.aitu.oop3.db.jdbcrepository;
 import edu.aitu.oop3.db.DatabaseConnection;
 import edu.aitu.oop3.db.entities.Appointment;
+import edu.aitu.oop3.db.exeption.AppointmentException;
+import edu.aitu.oop3.db.exeption.AppointmentNotFoundException;
 import edu.aitu.oop3.db.repository.AppointmentRepository;
 
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public class JdbcAppointmentRepository implements AppointmentRepository {
     }
 
     @Override
-    public void updateStatus(int appointmentId, String status) throws SQLException {
+    public void updateStatus(int appointmentId, String status) throws SQLException, AppointmentException {
         String sql = "UPDATE appointments SET status = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -60,7 +62,7 @@ public class JdbcAppointmentRepository implements AppointmentRepository {
 
             if (rowsAffected == 0) {
 
-                System.out.println("Error: Appointment " + appointmentId + " not found.");
+                throw new AppointmentNotFoundException(appointmentId);
             }
         }
     }
