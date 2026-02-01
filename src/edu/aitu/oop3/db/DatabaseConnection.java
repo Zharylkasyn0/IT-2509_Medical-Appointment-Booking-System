@@ -12,4 +12,23 @@ public class DatabaseConnection {
     public static java.sql.Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);//bcvhcc
     }
+
+    private static DatabaseConnection instance;
+
+    private DatabaseConnection() {
+        // Инициализация подключения
+        System.out.println("Подключение к базе данных установлено.");
+    }
+
+    public static synchronized DatabaseConnection getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+        return instance;
+    }
+
+    public void executeQuery(String query) {
+        System.out.println("Выполнение запроса: " + query);
+    }
 }
+
