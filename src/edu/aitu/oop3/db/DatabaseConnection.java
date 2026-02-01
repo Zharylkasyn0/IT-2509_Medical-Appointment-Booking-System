@@ -30,5 +30,6 @@ public class DatabaseConnection {
     public void executeQuery(String query) {
         System.out.println("Выполнение запроса: " + query);
     }
+
 }
 

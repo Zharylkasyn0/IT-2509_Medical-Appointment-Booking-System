@@ -3,7 +3,7 @@ import edu.aitu.oop3.db.DatabaseConnection;
 import edu.aitu.oop3.db.entities.Appointment;
 import edu.aitu.oop3.db.exeption.AppointmentException;
 import edu.aitu.oop3.db.exeption.AppointmentNotFoundException;
-import edu.aitu.oop3.db.repository.AppointmentRepository;
+import edu.aitu.oop3.db.repositories.AppointmentRepository;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,26 +1,64 @@
 package edu.aitu.oop3.db.entities;
 
-import java.time.LocalDateTime;
-
 public class Appointment {
-    private final int id;
-    private final int doctorId;
-    private final int patientId;
-    private final LocalDateTime appointmentTime;
-    private final String status;
+    private int id;
+    private int patientId;
+    private int doctorId;
+    private String date;
+    private String time;
+    private String status;
 
-    public Appointment(int id, int doctorId, int patientId, LocalDateTime appointmentTime, String status) {
-        this.id = id;
-        this.doctorId = doctorId;
-        this.patientId = patientId;
-        this.appointmentTime = appointmentTime;
-        this.status = status;
+    // Приватный конструктор, доступный только Билдеру
+    private Appointment(AppointmentBuilder builder) {
+        this.id = builder.id;
+        this.patientId = builder.patientId;
+        this.doctorId = builder.doctorId;
+        this.date = builder.date;
+        this.time = builder.time;
+        this.status = builder.status;
     }
 
-
+    // Геттеры
     public int getId() { return id; }
-    public int getDoctorId() { return doctorId; }
-    public int getPatientId() { return patientId; }
-    public LocalDateTime getAppointmentTime() { return appointmentTime; }
     public String getStatus() { return status; }
+
+    @Override
+    public String toString() {
+        return "Appointment [Date=" + date + ", Time=" + time + ", Status=" + status + "]";
+    }
+
+    // Статический класс Builder
+    public static class AppointmentBuilder {
+        private int id;
+        private int patientId;
+        private int doctorId;
+        private String date;
+        private String time;
+        private String status;
+
+        public AppointmentBuilder(int id, int patientId, int doctorId) {
+            this.id = id;
+            this.patientId = patientId;
+            this.doctorId = doctorId;
+        }
+
+        public AppointmentBuilder setDate(String date) {
+            this.date = date;
+            return this;
+        }
+
+        public AppointmentBuilder setTime(String time) {
+            this.time = time;
+            return this;
+        }
+
+        public AppointmentBuilder setStatus(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public Appointment build() {
+            return new Appointment(this);
+        }
+    }
 }

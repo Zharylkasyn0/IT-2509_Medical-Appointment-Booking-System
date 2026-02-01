@@ -1,4 +1,4 @@
-package edu.aitu.oop3.db.repository;
+package edu.aitu.oop3.db.repositories;
 
 import edu.aitu.oop3.db.entities.Doctor;
 import java.sql.SQLException;

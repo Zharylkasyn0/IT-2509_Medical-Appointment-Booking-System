@@ -2,7 +2,7 @@ package edu.aitu.oop3.db.jdbcrepository;
 
 import edu.aitu.oop3.db.DatabaseConnection;
 import edu.aitu.oop3.db.entities.Doctor;
-import edu.aitu.oop3.db.repository.DoctorRepository;
+import edu.aitu.oop3.db.repositories.DoctorRepository;
 
 import java.sql.*;
 import java.util.ArrayList;

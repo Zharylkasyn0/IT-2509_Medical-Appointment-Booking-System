@@ -1,7 +1,7 @@
-package edu.aitu.oop3.db.servise;
+package edu.aitu.oop3.db.services;
 
 import edu.aitu.oop3.db.entities.Appointment;
-import edu.aitu.oop3.db.repository.AppointmentRepository;
+import edu.aitu.oop3.db.repositories.AppointmentRepository;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;

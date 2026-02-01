@@ -1,13 +1,13 @@
-package edu.aitu.oop3.db.servise;
+package edu.aitu.oop3.db.services;
 
 import edu.aitu.oop3.db.entities.Appointment;
 import edu.aitu.oop3.db.entities.Doctor;
 import edu.aitu.oop3.db.entities.Patient;
 import edu.aitu.oop3.db.exeption.AppointmentException;
 import edu.aitu.oop3.db.exeption.TimeSlotOccupiedException;
-import edu.aitu.oop3.db.repository.AppointmentRepository;
-import edu.aitu.oop3.db.repository.DoctorRepository;
-import edu.aitu.oop3.db.repository.PatientRepository;
+import edu.aitu.oop3.db.repositories.AppointmentRepository;
+import edu.aitu.oop3.db.repositories.DoctorRepository;
+import edu.aitu.oop3.db.repositories.PatientRepository;
 
 import java.sql.SQLException;
 

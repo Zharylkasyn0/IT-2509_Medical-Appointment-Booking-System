@@ -1,16 +1,20 @@
 package edu.aitu.oop3.db;
+import edu.aitu.oop3.db.entities.Patient;
+import factories.UserFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import edu.aitu.oop3.db.entities.Appointment;
 import edu.aitu.oop3.db.entities.Doctor;
-import edu.aitu.oop3.db.entities.Patient;
 import edu.aitu.oop3.db.exeption.AppointmentException;
 import edu.aitu.oop3.db.jdbcrepository.*;
-import edu.aitu.oop3.db.repository.*;
-import edu.aitu.oop3.db.servise.*;
+import edu.aitu.oop3.db.repositories.*;
+import edu.aitu.oop3.db.services.*;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -118,5 +122,29 @@ public class Main {
         System.out.print("Email: "); String email = scanner.nextLine();
         appointmentService.addPatient(new Patient(0, name, email));
         System.out.println("Пациент добавлен!");
+    }
+    public static void main(String[] args) {
+        // 1. Singleton: Получаем инстанс БД
+        DatabaseConnection db = DatabaseConnection.getInstance();
+
+        // 2. Builder: Создаем пациентов
+        Patient p1 = new Patient.Builder().setId(1).setName("Алихан").setPhone("777").build();
+        Patient p2 = new Patient.Builder().setId(2).setName("Берик").setPhone("888").build();
+
+        List<Patient> patients = new ArrayList<>();
+        patients.add(p1);
+        patients.add(p2);
+
+        // 3. Lambdas: Фильтрация пациентов (поиск по имени)
+        String searchName = "Алихан";
+        List<Patient> filtered = patients.stream()
+                .filter(p -> p.toString().contains(searchName)) // Лямбда-выражение
+                .collect(Collectors.toList());
+
+        System.out.println("Результат поиска: " + filtered);
+
+        // 4. Factory: Создание пользователя
+        var user = UserFactory.createUser("DOCTOR");
+        user.showRole();
     }
 }
