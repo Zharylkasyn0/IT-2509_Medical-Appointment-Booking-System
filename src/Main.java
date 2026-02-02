@@ -1,54 +1,36 @@
 package edu.aitu.oop3.db;
+
 import edu.aitu.oop3.db.entities.Patient;
-import factories.UserFactory;
+import edu.aitu.oop3.db.services.AppointmentFactory;
+import edu.aitu.oop3.db.utils.Result;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import edu.aitu.oop3.db.entities.Appointment;
-import edu.aitu.oop3.db.entities.Doctor;
-import edu.aitu.oop3.db.exeption.AppointmentException;
-import edu.aitu.oop3.db.jdbcrepository.*;
-import edu.aitu.oop3.db.repositories.*;
-import edu.aitu.oop3.db.services.*;
-
-import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
-    private static AppointmentRepository repo;
-    private static AppointmentService appointmentService;
-    private static DoctorAvailabilityService availabilityService;
 
-     static void main() {
-        try {
-            repo = new JdbcAppointmentRepository();
-            DoctorRepository docRepo = new JdbcDoctorRepository();
-            PatientRepository patRepo = new JdbcPatientRepository();
+    // Сюда подключишь свои репозитории
+    // private static AppointmentRepository repo = new JdbcAppointmentRepository();
 
-            availabilityService = new DoctorAvailabilityService(repo);
-            appointmentService = new AppointmentService(repo, availabilityService, docRepo, patRepo);
+    public static void main(String[] args) {
+        // 1. Singleton: Инициализация БД
+        DatabaseConnection.getInstance();
 
-            runMenu();
-        } catch (Exception e) {
-            System.out.println("Критическая ошибка запуска: " + e.getMessage());
-            System.err.println("Произошла ошибка: " + e.getMessage());
-        }
+        // Запуск меню
+        runMenu();
     }
 
     private static void runMenu() {
         while (true) {
             System.out.println("\n--- MEDICAL SYSTEM MENU ---");
-            System.out.println("1. Показать расписание врача");
-            System.out.println("2. Записаться на прием (Book)");
-            System.out.println("3. Отменить запись (Cancel)");
-            System.out.println("4. Добавить нового врача");
-            System.out.println("5. Зарегистрировать пациента");
-            System.out.println("6. Выход");
-            System.out.print("Выбери пункт: ");
+            System.out.println("1. Демонстрация Builder (Пациент)");
+            System.out.println("2. Демонстрация Factory (Тип приема)");
+            System.out.println("3. Демонстрация Generics (Поиск)");
+            System.out.println("4. Выход");
+            System.out.print("Выбор: ");
 
             if (!scanner.hasNextInt()) {
                 System.out.println("Ошибка: Введите число!");
@@ -57,94 +39,81 @@ public class Main {
             }
 
             int choice = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); // Очистка буфера
 
-            try {
-                switch (choice) {
-                    case 1 -> showDoctorSchedule();
-                    case 2 -> bookAppointment();
-                    case 3 -> cancelAppointment();
-                    case 4 -> addNewDoctor();
-                    case 5 -> addNewPatient();
-                    case 6 -> { System.out.println("Выход..."); return; }
-                    default -> System.out.println("Неверный выбор.");
+            switch (choice) {
+                case 1 -> demoBuilder();
+                case 2 -> demoFactory();
+                case 3 -> demoGenerics(); // Лямбды внутри
+                case 4 -> {
+                    System.out.println("Выход...");
+                    return;
                 }
-            } catch (Exception e) {
-                System.out.println("\n>>> ОШИБКА: " + e.getMessage());
+                default -> System.out.println("Неверный выбор.");
             }
         }
     }
 
-    private static void showDoctorSchedule() throws SQLException {
-        System.out.print("Введите ID врача: ");
-        int docId = scanner.nextInt();
-        scanner.nextLine();
-        List<Appointment> list = repo.findByDoctorId(docId);
-        if (list.isEmpty()) {
-            System.out.println("Записей нет.");
-        } else {
-            for (Appointment app : list) {
-                System.out.println("ID записи: " + app.getId() + " | Статус: " + app.getStatus() + " | Время: " + app.getAppointmentTime());
-            }
+    // Демонстрация Builder (Milestone 2)
+    private static void demoBuilder() {
+        System.out.println("\n--- Создание пациентов через Builder ---");
+        Patient p1 = new Patient.Builder()
+                .setId(1)
+                .setName("Алихан")
+                .setEmail("ali@mail.com")
+                .setPhone("777-111")
+                .build();
+
+        System.out.println("Создан: " + p1);
+    }
+
+    // Демонстрация Factory (Milestone 2)
+    private static void demoFactory() {
+        System.out.println("\n--- Создание типа записи через Factory ---");
+        System.out.print("Введите тип (ONLINE / IN_PERSON): ");
+        String type = scanner.nextLine();
+
+        try {
+            var appointment = AppointmentFactory.createAppointment(type);
+            System.out.println("Успех: " + appointment.getDescription());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: " + e.getMessage());
         }
     }
 
-    private static void bookAppointment() throws SQLException, AppointmentException {
-        System.out.print("ID врача: "); int dId = scanner.nextInt();
-        System.out.print("ID пациента: "); int pId = scanner.nextInt();
-        System.out.print("Час (0-23): "); int h = scanner.nextInt();
-        System.out.print("Минута (0-59): "); int m = scanner.nextInt();
-        scanner.nextLine();
-
-        LocalDateTime time = LocalDateTime.now().plusDays(1).withHour(h).withMinute(m).withSecond(0).withNano(0);
-        appointmentService.bookAppointment(new Appointment(0, dId, pId, time, "SCHEDULED"));
-        System.out.println(">>> УСПЕШНО!");
-    }
-
-    private static void cancelAppointment() throws SQLException, AppointmentException {
-        System.out.print("Введите ID ЗАПИСИ (из списка расписания) для отмены: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-
-        appointmentService.cancelAppointment(id);
-        System.out.println("Запрос на отмену отправлен.");
-    }
-
-    private static void addNewDoctor() throws SQLException {
-        System.out.print("Имя врача: "); String name = scanner.nextLine();
-        System.out.print("Специализация: "); String spec = scanner.nextLine();
-        appointmentService.addDoctor(new Doctor(0, name, spec));
-        System.out.println("Доктор добавлен!");
-    }
-
-    private static void addNewPatient() throws SQLException {
-        System.out.print("Имя пациента: "); String name = scanner.nextLine();
-        System.out.print("Email: "); String email = scanner.nextLine();
-        appointmentService.addPatient(new Patient(0, name, email));
-        System.out.println("Пациент добавлен!");
-    }
-    public static void main(String[] args) {
-        // 1. Singleton: Получаем инстанс БД
-        DatabaseConnection db = DatabaseConnection.getInstance();
-
-        // 2. Builder: Создаем пациентов
-        Patient p1 = new Patient.Builder().setId(1).setName("Алихан").setPhone("777").build();
-        Patient p2 = new Patient.Builder().setId(2).setName("Берик").setPhone("888").build();
-
+    // Демонстрация Generics и Lambdas (Milestone 2)
+    private static void demoGenerics() {
         List<Patient> patients = new ArrayList<>();
-        patients.add(p1);
-        patients.add(p2);
+        patients.add(new Patient(1, "Алихан", "a@a.kz"));
+        patients.add(new Patient(2, "Берик", "b@b.kz"));
+        patients.add(new Patient(3, "Анна", "c@c.kz"));
 
-        // 3. Lambdas: Фильтрация пациентов (поиск по имени)
-        String searchName = "Алихан";
-        List<Patient> filtered = patients.stream()
-                .filter(p -> p.toString().contains(searchName)) // Лямбда-выражение
+        System.out.println("\n--- Поиск пациента (Lambda + Generics) ---");
+        System.out.print("Введите имя для поиска: ");
+        String searchName = scanner.nextLine();
+
+        // Использование Generics (Result)
+        Result<List<Patient>> searchResult = searchPatients(patients, searchName);
+
+        if (searchResult.isSuccess()) {
+            System.out.println("Найдено пациентов: " + searchResult.getData().size());
+            searchResult.getData().forEach(System.out::println);
+        } else {
+            System.out.println("Ошибка: " + searchResult.getErrorMessage());
+        }
+    }
+
+    // Метод, возвращающий Generic Result
+    private static Result<List<Patient>> searchPatients(List<Patient> list, String name) {
+        if (name == null || name.isEmpty()) {
+            return new Result<>("Имя поиска не может быть пустым");
+        }
+
+        // Milestone 1 & 2: Lambdas
+        List<Patient> filtered = list.stream()
+                .filter(p -> p.getName().toLowerCase().contains(name.toLowerCase()))
                 .collect(Collectors.toList());
 
-        System.out.println("Результат поиска: " + filtered);
-
-        // 4. Factory: Создание пользователя
-        var user = UserFactory.createUser("DOCTOR");
-        user.showRole();
+        return new Result<>(filtered);
     }
 }
