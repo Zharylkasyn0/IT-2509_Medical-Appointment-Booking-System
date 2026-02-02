@@ -1,5 +1,7 @@
 package edu.aitu.oop3.db.entities;
 
+import java.time.LocalDateTime;
+
 public class Appointment {
     private int id;
     private int patientId;
@@ -21,11 +23,16 @@ public class Appointment {
     // Геттеры
     public int getId() { return id; }
     public String getStatus() { return status; }
-
+    public LocalDateTime getAppointmentTime() {return time;
+    }
+    public int getDoctorId() {return doctorId;}
     @Override
     public String toString() {
         return "Appointment [Date=" + date + ", Time=" + time + ", Status=" + status + "]";
     }
+
+
+
 
     // Статический класс Builder
     public static class AppointmentBuilder {

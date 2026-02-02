@@ -1,23 +1,26 @@
 package edu.aitu.oop3.db;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static final String URL = "jdbc:postgresql://aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require";
-    private static final String USER = "postgres.owlrdkwmtgnifqqnijek";
-    private static final String PASSWORD = "Zharylkasyn_0";
-
-
-    public static java.sql.Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);//bcvhcc
-    }
-
+    // Milestone 2: Singleton
     private static DatabaseConnection instance;
+    private Connection connection;
+
+    // Обнови данные на свои реальные!
+    private static final String URL = "jdbc:postgresql://aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres";
+    private static final String USER = "postgres.your_user";
+    private static final String PASSWORD = "your_password";
 
     private DatabaseConnection() {
-        // Инициализация подключения
-        System.out.println("Подключение к базе данных установлено.");
+        try {
+            this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("Подключение к базе данных установлено.");
+        } catch (SQLException e) {
+            System.err.println("Ошибка подключения: " + e.getMessage());
+        }
     }
 
     public static synchronized DatabaseConnection getInstance() {
@@ -27,9 +30,8 @@ public class DatabaseConnection {
         return instance;
     }
 
-    public void executeQuery(String query) {
-        System.out.println("Выполнение запроса: " + query);
+    public Connection getConnection() {
+        return connection;
     }
-
 }
 
