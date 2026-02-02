@@ -1,6 +1,6 @@
-package edu.aitu.oop3.db;
 import edu.aitu.oop3.db.entities.Patient;
-import factories.UserFactory;
+import edu.aitu.oop3.db.services.UserFactory;
+import edu.aitu.oop3.db.DatabaseConnection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +144,7 @@ public class Main {
         System.out.println("Результат поиска: " + filtered);
 
         // 4. Factory: Создание пользователя
-        var user = UserFactory.createUser("DOCTOR");
-        user.showRole();
+        var user = UserFactory.createUser();
+        user.clone();
     }
 }

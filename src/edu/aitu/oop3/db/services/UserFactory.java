@@ -7,7 +7,7 @@ import edu.aitu.oop3.db.entities.Patient; // Убедитесь, что у ва�
 public class UserFactory {
 
     // Возвращаем Object или общий родительский класс User
-    public Object createUser(String userType, int id, String name, String surname) {
+    public static Object createUser(String userType, int id, String name, String surname) {
         if (userType == null) {
             return null;
         }
