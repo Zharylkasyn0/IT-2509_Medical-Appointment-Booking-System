@@ -1,9 +1,20 @@
 package edu.aitu.oop3.db.entities;
+
 public class Patient {
     private int id;
     private String name;
     private String email;
+    private String phone; // Опционально
 
+    // Приватный конструктор для Билдера
+    private Patient(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.email = builder.email;
+        this.phone = builder.phone;
+    }
+
+    // Обычный конструктор (если нужен для JDBC)
     public Patient(int id, String name, String email) {
         this.id = id;
         this.name = name;
@@ -14,37 +25,25 @@ public class Patient {
     public String getName() { return name; }
     public String getEmail() { return email; }
 
-
-        private String phone;
-        private String medicalHistory;
-
-        private Patient(Builder builder) {
-            this.id = builder.id;
-            this.name = builder.name;
-            this.phone = builder.phone;
-            this.medicalHistory = builder.medicalHistory;
-        }
-
-        // Builder Class
-        public static class Builder {
-            private int id;
-            private String name;
-            private String phone;
-            private String medicalHistory;
-
-            public Builder setId(int id) { this.id = id; return this; }
-            public Builder setName(String name) { this.name = name; return this; }
-            public Builder setPhone(String phone) { this.phone = phone; return this; }
-            public Builder setMedicalHistory(String history) { this.medicalHistory = history; return this; }
-
-            public Patient build() {
-                return new Patient(this);
-            }
-        }
-
-        @Override
-        public String toString() {
-            return "Пациент [ID=" + id + ", Имя=" + name + "]";
-        }
+    @Override
+    public String toString() {
+        return "Patient{id=" + id + ", name='" + name + "', email='" + email + "'}";
     }
 
+    // Milestone 2: Builder Pattern
+    public static class Builder {
+        private int id;
+        private String name;
+        private String email;
+        private String phone;
+
+        public Builder setId(int id) { this.id = id; return this; }
+        public Builder setName(String name) { this.name = name; return this; }
+        public Builder setEmail(String email) { this.email = email; return this; }
+        public Builder setPhone(String phone) { this.phone = phone; return this; }
+
+        public Patient build() {
+            return new Patient(this);
+        }
+    }
+}
