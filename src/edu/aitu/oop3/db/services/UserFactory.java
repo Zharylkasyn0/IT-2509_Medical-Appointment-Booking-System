@@ -1,25 +1,33 @@
-package edu.aitu.oop3.db.services;
+package edu.aitu.oop3.db.services; // проверь, чтобы этот путь совпадал с твоей папкой
 
-import edu.aitu.oop3.db.entities.Doctor; // Убедитесь, что у вас есть этот класс
-import edu.aitu.oop3.db.entities.Patient; // Убедитесь, что у вас есть этот класс
-// Если у вас есть общий класс User, импортируйте его, иначе используйте Object
+import edu.aitu.oop3.db.interfaces.IUser;
+
+// Вспомогательные классы (можно оставить здесь или вынести в отдельные файлы)
+class DoctorUser implements IUser {
+    @Override
+    public void showRole() {
+        System.out.println("Система: Вы вошли как Доктор.");
+    }
+}
+
+class PatientUser implements IUser {
+    @Override
+    public void showRole() {
+        System.out.println("Система: Вы вошли как Пациент.");
+    }
+}
 
 public class UserFactory {
-
-    // Возвращаем Object или общий родительский класс User
-    public static Object createUser(String userType, int id, String name, String surname) {
-        if (userType == null) {
+    // ИСПРАВЛЕНИЕ: Теперь метод принимает только ОДИН аргумент String
+    public static IUser createUser(String type) {
+        if (type == null) {
             return null;
         }
-
-        if (userType.equalsIgnoreCase("DOCTOR")) {
-            // Замените на свой конструктор Doctor
-            return new Doctor(id, name, surname);
-        } else if (userType.equalsIgnoreCase("PATIENT")) {
-            // Замените на свой конструктор Patient
-            return new Patient(id, name, surname);
+        if (type.equalsIgnoreCase("DOCTOR")) {
+            return new DoctorUser();
+        } else if (type.equalsIgnoreCase("PATIENT")) {
+            return new PatientUser();
         }
-
-        return null;
+        throw new IllegalArgumentException("Неизвестный тип пользователя: " + type);
     }
 }

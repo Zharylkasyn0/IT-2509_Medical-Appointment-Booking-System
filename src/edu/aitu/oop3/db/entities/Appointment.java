@@ -6,56 +6,63 @@ public class Appointment {
     private int id;
     private int patientId;
     private int doctorId;
-    private String date;
-    private String time;
+    // ИСПРАВЛЕНИЕ: Используем один LocalDateTime вместо двух String
+    private LocalDateTime appointmentTime;
     private String status;
 
-    // Приватный конструктор, доступный только Билдеру
+    // Приватный конструктор для Билдера
     private Appointment(AppointmentBuilder builder) {
         this.id = builder.id;
         this.patientId = builder.patientId;
         this.doctorId = builder.doctorId;
-        this.date = builder.date;
-        this.time = builder.time;
+        this.appointmentTime = builder.appointmentTime;
         this.status = builder.status;
     }
 
     // Геттеры
     public int getId() { return id; }
+    public int getPatientId() { return patientId; }
+    public int getDoctorId() { return doctorId; }
+    public LocalDateTime getAppointmentTime() { return appointmentTime; } // Возвращает дату и время
     public String getStatus() { return status; }
-    public LocalDateTime getAppointmentTime() {return time;
-    }
-    public int getDoctorId() {return doctorId;}
+
     @Override
     public String toString() {
-        return "Appointment [Date=" + date + ", Time=" + time + ", Status=" + status + "]";
+        return "Appointment{" +
+                "id=" + id +
+                ", patientId=" + patientId +
+                ", doctorId=" + doctorId +
+                ", time=" + appointmentTime +
+                ", status='" + status + '\'' +
+                '}';
     }
 
-
-
-
-    // Статический класс Builder
+    // Класс Builder (Строитель)
     public static class AppointmentBuilder {
         private int id;
         private int patientId;
         private int doctorId;
-        private String date;
-        private String time;
+        private LocalDateTime appointmentTime;
         private String status;
 
-        public AppointmentBuilder(int id, int patientId, int doctorId) {
+        public AppointmentBuilder setId(int id) {
             this.id = id;
-            this.patientId = patientId;
-            this.doctorId = doctorId;
-        }
-
-        public AppointmentBuilder setDate(String date) {
-            this.date = date;
             return this;
         }
 
-        public AppointmentBuilder setTime(String time) {
-            this.time = time;
+        public AppointmentBuilder setPatientId(int patientId) {
+            this.patientId = patientId;
+            return this;
+        }
+
+        public AppointmentBuilder setDoctorId(int doctorId) {
+            this.doctorId = doctorId;
+            return this;
+        }
+
+        // Этот метод теперь принимает правильный тип LocalDateTime
+        public AppointmentBuilder setAppointmentTime(LocalDateTime appointmentTime) {
+            this.appointmentTime = appointmentTime;
             return this;
         }
 

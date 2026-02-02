@@ -14,12 +14,3 @@ class InPersonAppointment implements IAppointmentType {
 }
 
 // Milestone 2: Factory Pattern
-public class AppointmentFactory {
-    public static IAppointmentType createAppointment(String type) {
-        return switch (type.toUpperCase()) {
-            case "ONLINE" -> new OnlineAppointment();
-            case "IN_PERSON" -> new InPersonAppointment();
-            default -> throw new IllegalArgumentException("Неизвестный тип записи: " + type);
-        };
-    }
-}

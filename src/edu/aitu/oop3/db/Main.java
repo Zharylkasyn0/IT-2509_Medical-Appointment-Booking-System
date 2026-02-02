@@ -1,6 +1,8 @@
 package edu.aitu.oop3.db;
+
 import edu.aitu.oop3.db.entities.Patient;
-import factories.UserFactory;
+import edu.aitu.oop3.db.services.UserFactory; // Убедись, что путь правильный
+import edu.aitu.oop3.db.interfaces.IUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +21,17 @@ import java.util.Scanner;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
+
+    // Репозитории и сервисы делаем статическими, чтобы доступ был из main
     private static AppointmentRepository repo;
     private static AppointmentService appointmentService;
     private static DoctorAvailabilityService availabilityService;
 
-     static void main() {
+    public static void main(String[] args) {
         try {
+            // 1. Инициализация (Singleton БД и Репозитории)
+            DatabaseConnection db = DatabaseConnection.getInstance();
+
             repo = new JdbcAppointmentRepository();
             DoctorRepository docRepo = new JdbcDoctorRepository();
             PatientRepository patRepo = new JdbcPatientRepository();
@@ -32,11 +39,44 @@ public class Main {
             availabilityService = new DoctorAvailabilityService(repo);
             appointmentService = new AppointmentService(repo, availabilityService, docRepo, patRepo);
 
+            // 2. Демонстрация паттернов (Milestone 2) перед запуском меню
+            runDemos();
+
+            // 3. Запуск основного меню
             runMenu();
+
         } catch (Exception e) {
             System.out.println("Критическая ошибка запуска: " + e.getMessage());
-            System.err.println("Произошла ошибка: " + e.getMessage());
+            e.printStackTrace();
         }
+    }
+
+    // Демонстрация заданий Milestone 2 (Builder, Lambda, Factory)
+    private static void runDemos() {
+        System.out.println("\n--- DEMO BLOCK START ---");
+
+        // Builder
+        Patient p1 = new Patient.Builder().setId(1).setName("Алихан").setPhone("777").build();
+        Patient p2 = new Patient.Builder().setId(2).setName("Берик").setPhone("888").build();
+        List<Patient> patients = new ArrayList<>();
+        patients.add(p1);
+        patients.add(p2);
+
+        // Lambdas
+        String searchName = "Алихан";
+        List<Patient> filtered = patients.stream()
+                .filter(p -> p.getName().contains(searchName))
+                .collect(Collectors.toList());
+        System.out.println("Lambda поиск: " + filtered);
+
+        // Factory
+        try {
+            IUser user = UserFactory.createUser("DOCTOR");
+            user.showRole();
+        } catch (Exception e) {
+            System.out.println("Ошибка Factory: " + e.getMessage());
+        }
+        System.out.println("--- DEMO BLOCK END ---\n");
     }
 
     private static void runMenu() {
@@ -57,7 +97,7 @@ public class Main {
             }
 
             int choice = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); // Очистка буфера
 
             try {
                 switch (choice) {
@@ -97,7 +137,17 @@ public class Main {
         scanner.nextLine();
 
         LocalDateTime time = LocalDateTime.now().plusDays(1).withHour(h).withMinute(m).withSecond(0).withNano(0);
-        appointmentService.bookAppointment(new Appointment(0, dId, pId, time, "SCHEDULED"));
+
+        // ИСПРАВЛЕНИЕ: Используем Builder вместо конструктора
+        Appointment app = new Appointment.AppointmentBuilder()
+                .setId(0) // ID генерируется в БД, ставим 0
+                .setDoctorId(dId)
+                .setPatientId(pId)
+                .setAppointmentTime(time)
+                .setStatus("SCHEDULED")
+                .build();
+
+        appointmentService.bookAppointment(app);
         System.out.println(">>> УСПЕШНО!");
     }
 
@@ -113,6 +163,7 @@ public class Main {
     private static void addNewDoctor() throws SQLException {
         System.out.print("Имя врача: "); String name = scanner.nextLine();
         System.out.print("Специализация: "); String spec = scanner.nextLine();
+        // У Doctor обычный конструктор, оставляем как есть
         appointmentService.addDoctor(new Doctor(0, name, spec));
         System.out.println("Доктор добавлен!");
     }
@@ -120,31 +171,15 @@ public class Main {
     private static void addNewPatient() throws SQLException {
         System.out.print("Имя пациента: "); String name = scanner.nextLine();
         System.out.print("Email: "); String email = scanner.nextLine();
-        appointmentService.addPatient(new Patient(0, name, email));
+
+        // Используем Builder и для добавления пациента
+        Patient patient = new Patient.Builder()
+                .setId(0)
+                .setName(name)
+                .setEmail(email)
+                .build();
+
+        appointmentService.addPatient(patient);
         System.out.println("Пациент добавлен!");
-    }
-    public static void main(String[] args) {
-        // 1. Singleton: Получаем инстанс БД
-        DatabaseConnection db = DatabaseConnection.getInstance();
-
-        // 2. Builder: Создаем пациентов
-        Patient p1 = new Patient.Builder().setId(1).setName("Алихан").setPhone("777").build();
-        Patient p2 = new Patient.Builder().setId(2).setName("Берик").setPhone("888").build();
-
-        List<Patient> patients = new ArrayList<>();
-        patients.add(p1);
-        patients.add(p2);
-
-        // 3. Lambdas: Фильтрация пациентов (поиск по имени)
-        String searchName = "Алихан";
-        List<Patient> filtered = patients.stream()
-                .filter(p -> p.toString().contains(searchName)) // Лямбда-выражение
-                .collect(Collectors.toList());
-
-        System.out.println("Результат поиска: " + filtered);
-
-        // 4. Factory: Создание пользователя
-        var user = UserFactory.createUser("DOCTOR");
-        user.showRole();
     }
 }
