@@ -6,7 +6,7 @@ public class Patient {
 
     public Patient(int id, String name, String email) {
         this.id = id;
-        this.name = name;
+        this.name = name; //smt
         this.email = email;
     }
 
