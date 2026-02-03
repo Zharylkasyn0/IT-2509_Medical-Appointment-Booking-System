@@ -1,5 +1,6 @@
 package db;
 
+import db.ClinicConfig;
 import db.jdbcrepository.JdbcAppointmentRepository;
 import db.jdbcrepository.JdbcDoctorRepository;
 import db.jdbcrepository.JdbcPatientRepository;
@@ -26,11 +27,8 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
-
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
-
-    // Репозитории и сервисы делаем статическими, чтобы доступ был из main
     private static AppointmentRepository repo;
     private static AppointmentService appointmentService;
     private static DoctorAvailabilityService availabilityService;
@@ -39,11 +37,9 @@ public class Main {
         try {
             // 1. Инициализация (Singleton БД и Репозитории)
             DatabaseConnection db = DatabaseConnection.getInstance();
-
             repo = new JdbcAppointmentRepository();
             DoctorRepository docRepo = new JdbcDoctorRepository();
             PatientRepository patRepo = new JdbcPatientRepository();
-
             availabilityService = new DoctorAvailabilityService(repo);
             appointmentService = new AppointmentService(repo, availabilityService, docRepo, patRepo);
 
@@ -59,7 +55,7 @@ public class Main {
         }
     }
 
-    // Демонстрация заданий Milestone 2 (Builder, Lambda, Factory)
+    // Демонстрация заданий Milestone 2 (Builder, Lambda, Factory, Singleton)
     private static void runDemos() {
         System.out.println("\n--- DEMO BLOCK START ---");
 
@@ -84,6 +80,11 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Ошибка Factory: " + e.getMessage());
         }
+
+        // Singleton
+        ClinicConfig config = ClinicConfig.getInstance();
+        System.out.println("Singleton ClinicConfig: " + config);
+        System.out.println("Рабочие часы: " + config.getOpeningTime() + " - " + config.getClosingTime());
         System.out.println("--- DEMO BLOCK END ---\n");
     }
 
@@ -95,8 +96,9 @@ public class Main {
             System.out.println("3. Отменить запись (Cancel)");
             System.out.println("4. Добавить нового врача");
             System.out.println("5. Зарегистрировать пациента");
-            System.out.println("6. Выход");
-            System.out.print("Выбери пункт: ");
+            System.out.println("6. Показать записи пациента");
+            System.out.println("7. Выход");
+            System.out.println("Выбери пункт: ");
 
             if (!scanner.hasNextInt()) {
                 System.out.println("Ошибка: Введите число!");
@@ -114,7 +116,8 @@ public class Main {
                     case 3 -> cancelAppointment();
                     case 4 -> addNewDoctor();
                     case 5 -> addNewPatient();
-                    case 6 -> { System.out.println("Выход..."); return; }
+                    case 6 -> showPatientAppointments();
+                    case 7 -> { System.out.println("Выход..."); return; }
                     default -> System.out.println("Неверный выбор.");
                 }
             } catch (Exception e) {
@@ -124,7 +127,7 @@ public class Main {
     }
 
     private static void showDoctorSchedule() throws SQLException {
-        System.out.print("Введите ID врача: ");
+        System.out.println("Введите ID врача: ");
         int docId = scanner.nextInt();
         scanner.nextLine();
         List<Appointment> list = repo.findByDoctorId(docId);
@@ -137,14 +140,31 @@ public class Main {
         }
     }
 
+    private static void showPatientAppointments() throws SQLException {
+        System.out.println("Введите ID пациента: ");
+        int patientId = scanner.nextInt();
+        scanner.nextLine();
+        List<Appointment> list = repo.findByPatientId(patientId);
+        if (list.isEmpty()) {
+            System.out.println("Записей нет.");
+        } else {
+            for (Appointment app : list) {
+                System.out.println("ID записи: " + app.getId() +
+                        " | Доктор ID: " + app.getDoctorId() +
+                        " | Статус: " + app.getStatus() +
+                        " | Время: " + app.getAppointmentTime());
+            }
+        }
+    }
+
     private static void bookAppointment() {
-        System.out.print("ID врача: ");
+        System.out.println("ID врача: ");
         int dId = scanner.nextInt();
-        System.out.print("ID пациента: ");
+        System.out.println("ID пациента: ");
         int pId = scanner.nextInt();
-        System.out.print("Час (0-23): ");
+        System.out.println("Час (0-23): ");
         int h = scanner.nextInt();
-        System.out.print("Минута (0-59): ");
+        System.out.println("Минута (0-59): ");
         int m = scanner.nextInt();
         scanner.nextLine();
 
@@ -180,7 +200,6 @@ public class Main {
             System.out.println("Ошибка: " + result.getErrorMessage());
         }
     }
-
 
     private static void addNewDoctor() {
         System.out.print("Имя врача: ");

@@ -2,17 +2,17 @@ package db.entities; //  Сверяемся с Main.java
 
 // 1. УБРАЛ "static". Класс должен быть просто public
 public class Patient {
-    private int id; // Добавил поля, которые используются в Main (строка 69 в PDF)
-    private String name;
-    private int age;
-    private String phone;
-    private String email;
+    private final int id; // Добавил поля, которые используются в Main (строка 69 в PDF)
+    private final String name;
+
+    private final String phone;
+    private final String email;
 
     // Приватный конструктор принимает Builder
     private Patient(Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
-        this.age = builder.age;
+
         this.phone = builder.phone;
         this.email = builder.email;
     }
@@ -25,14 +25,14 @@ public class Patient {
 
     @Override
     public String toString() {
-        return "Patient{id=" + id + ", name='" + name + "', phone='" + phone + "'}";
+        return "Patient{id=" + id + ", name='" + name + '\'' + "', phone='" + phone + "'}";
     }
 
     // 2. Builder должен быть static (это верно)
     public static class Builder {
         private int id;
         private String name;
-        private int age;
+
         private String phone;
         private String email;
 
@@ -46,10 +46,6 @@ public class Patient {
             return this;
         }
 
-        public Builder setAge(int age) {
-            this.age = age;
-            return this;
-        }
 
         public Builder setPhone(String phone) {
             this.phone = phone;

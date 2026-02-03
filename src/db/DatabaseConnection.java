@@ -9,10 +9,11 @@ public class DatabaseConnection {
     private static Connection connection;
 
     private DatabaseConnection() throws SQLException {
-        this.connection = DriverManager.getConnection(
-                "jdbc:postgresql://aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres?sslMode=require",
-                "postgres.owlrdkwmtgnifqqnijek",
-                "Zharylkasyn_0");
+
+        String url = "jdbc:postgresql://aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres?sslMode=require";
+        String user = "postgres.owlrdkwmtgnifqqnijek";
+        String password = "Zharylkasyn_0";
+    this.connection = DriverManager.getConnection(url,user,password);
     }
 
     public static synchronized DatabaseConnection getInstance() throws SQLException {

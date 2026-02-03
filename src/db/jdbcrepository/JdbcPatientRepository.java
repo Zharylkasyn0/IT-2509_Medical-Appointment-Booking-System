@@ -30,11 +30,13 @@ public class JdbcPatientRepository implements PatientRepository {
                     return new Patient.Builder()
                             .setId(rs.getInt("id"))
                             .setName(rs.getString("name"))
-                            .setEmail(rs.getString("email")) // Убедитесь, что в БД колонка называется email
+                            .setEmail(rs.getString("email"))
+                            .setPhone(rs.getString("phone"))
                             .build();
                 }
             }
         }
         return null;
     }
+
 }
