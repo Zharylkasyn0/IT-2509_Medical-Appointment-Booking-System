@@ -40,8 +40,7 @@ public class JdbcDoctorRepository implements DoctorRepository {
         return List.of();
     }
 
-    @Override
-    public boolean add(Doctor entity) {
+    public boolean save(Doctor entity) {
         return false;
     }
 

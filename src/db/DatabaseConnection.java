@@ -9,23 +9,20 @@ public class DatabaseConnection {
     private static DatabaseConnection instance;
     private Connection connection;
 
-    private DatabaseConnection() {
-        try {
-            // Твои данные для подключения
-            this.connection = DriverManager.getConnection("jdbc:postgresql://aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require", "postgres.owlrdkwmtgnifqqnijek", "Zharylkasyn_0");
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private DatabaseConnection() throws SQLException{
+        this.connection = DriverManager.getConnection("jdbc:postgresql://aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require", "postgres.owlrdkwmtgnifqqnijek", "Zharylkasyn_0");
         }
-    }
 
-    public static synchronized DatabaseConnection getInstance() {
+
+
+    public static synchronized DatabaseConnection getInstance() throws SQLException{
         if (instance == null) {
             instance = new DatabaseConnection();
         }
         return instance;
     }
 
-    public static Connection getConnection() {
+    public  Connection getConnection() {
         return connection;
     }
 }

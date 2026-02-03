@@ -15,8 +15,6 @@ public class DoctorService {
 
     // Использование Lambda и Stream API для фильтрации
     public List<Doctor> getDoctorsBySpecialization(String specialization) {
-        List<Doctor> allDoctors = doctorRepository.getAll();
-
         return allDoctors.stream()
                 .filter(doc -> doc.getSpecialization().equalsIgnoreCase(specialization)) // Лямбда
                 .collect(Collectors.toList());
@@ -24,8 +22,6 @@ public class DoctorService {
 
     // Использование Lambda для сортировки по имени
     public List<Doctor> getDoctorsSortedByName() {
-        List<Doctor> allDoctors = doctorRepository.getAll();
-
         allDoctors.sort((d1, d2) -> d1.getName().compareTo(d2.getName())); // Лямбда
         return allDoctors;
     }
