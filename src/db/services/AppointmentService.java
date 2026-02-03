@@ -4,11 +4,10 @@ import db.entities.Appointment;
 import db.entities.Doctor;
 import db.entities.Patient;
 import db.exeption.AppointmentException;
-import db.exeption.TimeSlotOccupiedException;
 import db.repositories.AppointmentRepository;
 import db.repositories.DoctorRepository;
 import db.repositories.PatientRepository;
-
+import db.utils.Result;
 import java.sql.SQLException;
 
 public class AppointmentService {
@@ -27,22 +26,42 @@ public class AppointmentService {
         this.patientRepo = patientRepo;
     }
 
-    public void addDoctor(Doctor doctor) throws SQLException {
-        doctorRepo.save(doctor);
-    }
-
-    public void addPatient(Patient patient) throws SQLException {
-        patientRepo.save(patient);
-    }
-
-    public void bookAppointment(Appointment app) throws SQLException, AppointmentException {
-        if (!availabilityService.isAvailable(app.getDoctorId(), app.getAppointmentTime())) {
-            throw new TimeSlotOccupiedException();
+    public Result<Boolean> addDoctor(Doctor doctor) {
+        try {
+            doctorRepo.save(doctor);
+            return new Result<>(true);
+        } catch (SQLException e) {
+            return new Result<>(e.getMessage());
         }
-        appointmentRepo.save(app);
     }
 
-    public void cancelAppointment(int appointmentId) throws SQLException, AppointmentException {
-        appointmentRepo.updateStatus(appointmentId, "CANCELLED");
+    public Result<Boolean> addPatient(Patient patient) {
+        try {
+            patientRepo.save(patient);
+            return new Result<>(true);
+        } catch (SQLException e) {
+            return new Result<>(e.getMessage());
+        }
+    }
+
+    public Result<Boolean> bookAppointment(Appointment app) {
+        try {
+            if (!availabilityService.isAvailable(app.getDoctorId(), app.getAppointmentTime())) {
+                return new Result<>("This time slot is already booked.");
+            }
+            appointmentRepo.save(app);
+            return new Result<>(true);
+        } catch (SQLException | AppointmentException e) {
+            return new Result<>(e.getMessage());
+        }
+    }
+
+    public Result<Boolean> cancelAppointment(int appointmentId) {
+        try {
+            appointmentRepo.updateStatus(appointmentId, "CANCELLED");
+            return new Result<>(true);
+        } catch (SQLException | AppointmentException e) {
+            return new Result<>(e.getMessage());
+        }
     }
 }
