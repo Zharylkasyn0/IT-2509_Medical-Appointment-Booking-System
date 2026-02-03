@@ -13,16 +13,16 @@ public class DoctorService {
         this.doctorRepository = doctorRepository;
     }
 
-    // Использование Lambda и Stream API для фильтрации
     public List<Doctor> getDoctorsBySpecialization(String specialization) {
+        List<Doctor> allDoctors = doctorRepository.getAll();
         return allDoctors.stream()
-                .filter(doc -> doc.getSpecialization().equalsIgnoreCase(specialization)) // Лямбда
+                .filter(doc -> doc.getSpecialization().equalsIgnoreCase(specialization))
                 .collect(Collectors.toList());
     }
 
-    // Использование Lambda для сортировки по имени
     public List<Doctor> getDoctorsSortedByName() {
-        allDoctors.sort((d1, d2) -> d1.getName().compareTo(d2.getName())); // Лямбда
+        List<Doctor> allDoctors = doctorRepository.getAll();
+        allDoctors.sort((d1, d2) -> d1.getName().compareTo(d2.getName()));
         return allDoctors;
     }
 }
