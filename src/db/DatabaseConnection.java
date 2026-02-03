@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
     private static DatabaseConnection instance;
-    private Connection connection;
+    private static Connection connection;
 
     private DatabaseConnection() throws SQLException {
         this.connection = DriverManager.getConnection(

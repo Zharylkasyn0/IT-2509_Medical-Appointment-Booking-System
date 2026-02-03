@@ -27,12 +27,7 @@ public class AppointmentService {
     }
 
     public Result<Boolean> addDoctor(Doctor doctor) {
-        try {
-            doctorRepo.save(doctor);
-            return new Result<>(true);
-        } catch (SQLException e) {
-            return new Result<>(e.getMessage());
-        }
+        return doctorRepo.save(doctor);
     }
 
     public Result<Boolean> addPatient(Patient patient) {
@@ -47,7 +42,7 @@ public class AppointmentService {
     public Result<Boolean> bookAppointment(Appointment app) {
         try {
             if (!availabilityService.isAvailable(app.getDoctorId(), app.getAppointmentTime())) {
-                return new Result<>("This time slot is already booked.");
+                throw new AppointmentException("This time slot is already booked.");
             }
             appointmentRepo.save(app);
             return new Result<>(true);
