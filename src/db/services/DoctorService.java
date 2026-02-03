@@ -3,6 +3,7 @@ package db.services;
 
 import db.entities.Doctor;
 import db.repositories.IRepository;
+import db.utils.Result;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,20 +14,29 @@ public class DoctorService {
         this.doctorRepository = doctorRepository;
     }
 
-    // Использование Lambda и Stream API для фильтрации
-    public List<Doctor> getDoctorsBySpecialization(String specialization) {
-        List<Doctor> allDoctors = doctorRepository.getAll();
-
-        return allDoctors.stream()
-                .filter(doc -> doc.getSpecialization().equalsIgnoreCase(specialization)) // Лямбда
-                .collect(Collectors.toList());
+    public Result<List<Doctor>> getDoctorsBySpecialization(String specialization) {
+        Result<List<Doctor>> result = doctorRepository.getAll();
+        if (result.isSuccess()) {
+            List<Doctor> filtered = result.getData().stream()
+                    // Исправлено: убраны типы в лямбде
+                    .filter(doc -> doc.getSpecialization().equalsIgnoreCase(specialization))
+                    .collect(Collectors.toList());
+            return new Result<>(filtered);
+        } else {
+            return new Result<>(result.getErrorMessage());
+        }
     }
 
-    // Использование Lambda для сортировки по имени
-    public List<Doctor> getDoctorsSortedByName() {
-        List<Doctor> allDoctors = doctorRepository.getAll();
-
-        allDoctors.sort((d1, d2) -> d1.getName().compareTo(d2.getName())); // Лямбда
-        return allDoctors;
+    public Result<List<Doctor>> getDoctorsSortedByName() {
+        Result<List<Doctor>> result = doctorRepository.getAll();
+        if (result.isSuccess()) {
+            List<Doctor> allDoctors = result.getData();
+            // Исправлено: правильный синтаксис лямбды
+            allDoctors.sort((d1, d2) -> d1.getName().compareTo(d2.getName()));
+            return new Result<>(allDoctors);
+        } else {
+            return new Result<>(result.getErrorMessage());
+        }
     }
+
 }

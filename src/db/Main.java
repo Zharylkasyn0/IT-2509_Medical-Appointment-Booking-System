@@ -20,6 +20,8 @@ import db.exeption.AppointmentException;
 import db.jdbcrepository.*;
 import db.repositories.*;
 import db.services.*;
+import db.utils.Result;
+
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Scanner;
@@ -135,14 +137,19 @@ public class Main {
         }
     }
 
-    private static void bookAppointment() throws SQLException, AppointmentException {
-        System.out.print("ID врача: "); int dId = scanner.nextInt();
-        System.out.print("ID пациента: "); int pId = scanner.nextInt();
-        System.out.print("Час (0-23): "); int h = scanner.nextInt();
-        System.out.print("Минута (0-59): "); int m = scanner.nextInt();
+    private static void bookAppointment() {
+        System.out.print("ID врача: ");
+        int dId = scanner.nextInt();
+        System.out.print("ID пациента: ");
+        int pId = scanner.nextInt();
+        System.out.print("Час (0-23): ");
+        int h = scanner.nextInt();
+        System.out.print("Минута (0-59): ");
+        int m = scanner.nextInt();
         scanner.nextLine();
 
-        LocalDateTime time = LocalDateTime.now().plusDays(1).withHour(h).withMinute(m).withSecond(0).withNano(0);
+        LocalDateTime time = LocalDateTime.now().plusDays(1)
+                .withHour(h).withMinute(m).withSecond(0).withNano(0);
 
         // ИСПРАВЛЕНИЕ: Используем Builder вместо конструктора
         Appointment app = new Appointment.AppointmentBuilder()
@@ -153,39 +160,62 @@ public class Main {
                 .setStatus("SCHEDULED")
                 .build();
 
-        appointmentService.bookAppointment(app);
-        System.out.println(">>> УСПЕШНО!");
+        Result<Boolean> result = appointmentService.bookAppointment(app);
+        if (result.isSuccess()) {
+            System.out.println(">>> УСПЕШНО!");
+        } else {
+            System.out.println("Ошибка: " + result.getErrorMessage());
+        }
     }
 
-    private static void cancelAppointment() throws SQLException, AppointmentException {
+    private static void cancelAppointment() {
         System.out.print("Введите ID ЗАПИСИ (из списка расписания) для отмены: ");
         int id = scanner.nextInt();
         scanner.nextLine();
 
-        appointmentService.cancelAppointment(id);
-        System.out.println("Запрос на отмену отправлен.");
+        Result<Boolean> result = appointmentService.cancelAppointment(id);
+        if (result.isSuccess()) {
+            System.out.println("Запрос на отмену отправлен.");
+        } else {
+            System.out.println("Ошибка: " + result.getErrorMessage());
+        }
     }
 
-    private static void addNewDoctor() throws SQLException {
-        System.out.print("Имя врача: "); String name = scanner.nextLine();
-        System.out.print("Специализация: "); String spec = scanner.nextLine();
+
+    private static void addNewDoctor() {
+        System.out.print("Имя врача: ");
+        String name = scanner.nextLine();
+        System.out.print("Специализация: ");
+        String spec = scanner.nextLine();
         // У Doctor обычный конструктор, оставляем как есть
-        appointmentService.addDoctor(new Doctor(0, name, spec));
-        System.out.println("Доктор добавлен!");
+        Result<Boolean> result = appointmentService.addDoctor(new Doctor(0, name, spec));
+        if (result.isSuccess()) {
+            System.out.println("Доктор добавлен!");
+        } else {
+            System.out.println("Ошибка: " + result.getErrorMessage());
+        }
     }
 
-    private static void addNewPatient() throws SQLException {
-        System.out.print("Имя пациента: "); String name = scanner.nextLine();
-        System.out.print("Email: "); String email = scanner.nextLine();
+    private static void addNewPatient() {
+        System.out.print("Имя пациента: ");
+        String name = scanner.nextLine();
+        System.out.print("Email: ");
+        String email = scanner.nextLine();
+        System.out.print("Телефон: ");
+        String phone = scanner.nextLine();
 
-        // Используем Builder и для добавления пациента
         Patient patient = new Patient.Builder()
                 .setId(0)
                 .setName(name)
                 .setEmail(email)
+                .setPhone(phone)
                 .build();
 
-        appointmentService.addPatient(patient);
-        System.out.println("Пациент добавлен!");
+        Result<Boolean> result = appointmentService.addPatient(patient);
+        if (result.isSuccess()) {
+            System.out.println("Пациент добавлен!");
+        } else {
+            System.out.println("Ошибка: " + result.getErrorMessage());
+        }
     }
 }

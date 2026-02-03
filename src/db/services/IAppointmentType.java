@@ -1,7 +1,7 @@
 package db.services;
 
 // Абстрактный тип или интерфейс
-interface IAppointmentType {
+public interface IAppointmentType {
     String getDescription();
 }
 

@@ -92,7 +92,7 @@ public class JdbcAppointmentRepository implements AppointmentRepository {
                 .setId(rs.getInt("id"))
                 .setDoctorId(rs.getInt("doctor_id"))
                 .setPatientId(rs.getInt("patient_id"))
-                .setAppointmentTime(rs.getTimestamp("appointment_time").toLocalDateTime())
+                .setAppointmentTime(rs.getTimestamp("appointment_time").toLocalDateTime()) // исправлено
                 .setStatus(rs.getString("status"))
                 .build();
     }
