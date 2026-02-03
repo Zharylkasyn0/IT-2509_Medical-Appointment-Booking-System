@@ -1,49 +1,47 @@
 package edu.aitu.oop3.db.entities;
 
+// Пример внутри класса Patient или отдельный класс PatientBuilder
 public class Patient {
-    private int id;
     private String name;
-    private String email;
-    private String phone; // Опционально
+    private int age;
+    private String phone;
+    // ... другие поля
 
-    // Приватный конструктор для Билдера
+    // Приватный конструктор
     private Patient(Builder builder) {
-        this.id = builder.id;
         this.name = builder.name;
-        this.email = builder.email;
+        this.age = builder.age;
         this.phone = builder.phone;
     }
 
-    // Обычный конструктор (если нужен для JDBC)
-    public Patient(int id, String name, String email) {
-        this.id = id;
-        this.name = name; //smt
-        this.email = email;
-    }
-
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
-
-    @Override
-    public String toString() {
-        return "Patient{id=" + id + ", name='" + name + "', email='" + email + "'}";
-    }
-
-    // Milestone 2: Builder Pattern
     public static class Builder {
-        private int id;
         private String name;
-        private String email;
+        private int age;
         private String phone;
 
-        public Builder setId(int id) { this.id = id; return this; }
-        public Builder setName(String name) { this.name = name; return this; }
-        public Builder setEmail(String email) { this.email = email; return this; }
-        public Builder setPhone(String phone) { this.phone = phone; return this; }
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setAge(int age) {
+            this.age = age;
+            return this;
+        }
+
+        public Builder setPhone(String phone) {
+            this.phone = phone;
+            return this;
+        }
 
         public Patient build() {
             return new Patient(this);
         }
     }
 }
+
+// Использование в Main.java (в методе addNewPatient):
+Patient newPatient = new Patient.Builder()
+        .setName("Ivan")
+        .setAge(30)
+        .build();
