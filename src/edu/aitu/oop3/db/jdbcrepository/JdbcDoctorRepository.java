@@ -36,6 +36,21 @@ public class JdbcDoctorRepository implements DoctorRepository {
     }
 
     @Override
+    public List<Doctor> getAll() {
+        return List.of();
+    }
+
+    @Override
+    public boolean add(Doctor entity) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(int id) {
+        return false;
+    }
+
+    @Override
     public List<Doctor> findAll() throws SQLException {
         List<Doctor> doctors = new ArrayList<>();
         String sql = "SELECT * FROM doctors";
