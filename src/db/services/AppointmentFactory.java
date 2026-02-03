@@ -1,6 +1,6 @@
 package db.services;
 
-import edu.aitu.oop3.db.interfaces.IAppointmentType; // если есть интерфейс
+import db.interfaces.IAppointmentType; // если есть интерфейс
 
 public class AppointmentFactory {
     public static String createAppointment(String type) {

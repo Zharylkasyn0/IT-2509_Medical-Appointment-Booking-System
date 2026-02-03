@@ -88,12 +88,12 @@ public class JdbcAppointmentRepository implements AppointmentRepository {
 
 
     private Appointment mapResultSetToAppointment(ResultSet rs) throws SQLException {
-        return new Appointment(
-                rs.getInt("id"),
-                rs.getInt("doctor_id"),
-                rs.getInt("patient_id"),
-                rs.getTimestamp("appointment_time").toLocalDateTime(),
-                rs.getString("status")
-        );
+        return new Appointment.AppointmentBuilder()
+                .setId(rs.getInt("id"))
+                .setDoctorId(rs.getInt("doctor_id"))
+                .setPatientId(rs.getInt("patient_id"))
+                .setAppointmentTime(rs.getTimestamp("appointment_time").toLocalDateTime())
+                .setStatus(rs.getString("status"))
+                .build();
     }
 }

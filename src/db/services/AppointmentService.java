@@ -2,7 +2,7 @@ package db.services;
 
 import db.entities.Appointment;
 import db.entities.Doctor;
-import edu.aitu.oop3.db.entities.Patient;
+import db.entities.Patient;
 import db.exeption.AppointmentException;
 import db.exeption.TimeSlotOccupiedException;
 import db.repositories.AppointmentRepository;

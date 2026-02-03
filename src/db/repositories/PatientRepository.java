@@ -1,6 +1,6 @@
 package db.repositories;
 
-import edu.aitu.oop3.db.entities.Patient;
+import db.entities.Patient;
 import java.sql.SQLException;
 
 public interface PatientRepository {

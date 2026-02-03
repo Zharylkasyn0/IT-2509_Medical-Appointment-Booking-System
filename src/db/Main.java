@@ -11,18 +11,15 @@ import db.services.DoctorAvailabilityService;
 import db.entities.Patient;
 import db.services.UserFactory;
 import db.interfaces.IUser;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import db.entities.Appointment;
 import db.entities.Doctor;
 import db.exeption.AppointmentException;
 import db.jdbcrepository.*;
 import db.repositories.*;
 import db.services.*;
-
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Scanner;

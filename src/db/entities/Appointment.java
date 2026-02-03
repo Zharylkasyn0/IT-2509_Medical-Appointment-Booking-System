@@ -11,7 +11,7 @@ public class Appointment {
     private String status;
 
     // Приватный конструктор для Билдера
-    private Appointment(AppointmentBuilder builder) {
+    public Appointment(AppointmentBuilder builder) {
         this.id = builder.id;
         this.patientId = builder.patientId;
         this.doctorId = builder.doctorId;

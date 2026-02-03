@@ -1,7 +1,7 @@
 package db.jdbcrepository;
 
 import db.DatabaseConnection;
-import edu.aitu.oop3.db.entities.Patient;
+import db.entities.Patient;
 import db.repositories.PatientRepository;
 
 import java.sql.*;
@@ -26,7 +26,11 @@ public class JdbcPatientRepository implements PatientRepository {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return new Patient(rs.getInt("id"), rs.getString("name"), rs.getString("email"));
+                    return new Patient.Builder()
+                            .setId(rs.getInt("id"))
+                            .setName(rs.getString("name"))
+                            .setEmail(rs.getString("email")) // Убедитесь, что в БД колонка называется email
+                            .build();
                 }
             }
         }
