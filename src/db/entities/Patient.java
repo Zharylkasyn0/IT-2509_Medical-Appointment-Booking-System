@@ -1,30 +1,45 @@
 package db.entities;
 
-import java.util.Collection;
-
 public class Patient {
+    private int id;
     private String name;
     private int age;
-    private String phone;
-    private int id;
+    private String email;
+    private int phone; // Теперь это int
 
-    // Приватный конструктор: объект создается только через Builder
     private Patient(Builder builder) {
+        this.id = builder.id;
         this.name = builder.name;
         this.age = builder.age;
+        this.email = builder.email;
         this.phone = builder.phone;
-        this.id = builder.id;
     }
 
+    // Геттеры
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public int getAge() { return age; }
+    public String getEmail() { return email; } // Добавили геттер
+    public int getPhone() { return phone; }    // Добавили геттер
 
+    @Override
+    public String toString() {
+        return "Patient{id=" + id + ", name='" + name + "', phone=" + phone + "}";
+    }
 
-
-    // Статический вложенный класс Builder
+    // Builder
     public static class Builder {
+        private int id;
         private String name;
         private int age;
-        private String phone;
-        private int id;
+        private String email;
+        private int phone;
+
+        public Builder setId(int id) {
+            this.id = id;
+            return this;
+        }
+
         public Builder setName(String name) {
             this.name = name;
             return this;
@@ -35,7 +50,12 @@ public class Patient {
             return this;
         }
 
-        public Builder setPhone(String phone) {
+        public Builder setEmail(String email) {
+            this.email = email; // ИСПРАВЛЕНО (было this.name = name)
+            return this;
+        }
+
+        public Builder setPhone(int phone) {
             this.phone = phone;
             return this;
         }
@@ -43,18 +63,5 @@ public class Patient {
         public Patient build() {
             return new Patient(this);
         }
-
-        public Builder setId(int i) {
-            this.id = id;
-            return this;
-        }
-    }
-
-    // Геттеры для полей...
-    public String getName() { return name; }
-    public String getPhone() {return phone;}
-    @Override
-    public String toString() {
-        return "Patient{id=" + id + ", name='" + name + "'}";
     }
 }

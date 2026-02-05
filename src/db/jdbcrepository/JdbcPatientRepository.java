@@ -13,7 +13,8 @@ public class JdbcPatientRepository implements PatientRepository {
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, patient.getName());
-            stmt.setString(3, patient.getPhone());
+            stmt.setString(2, patient.getEmail());
+            stmt.setInt(3, patient.getPhone());
             stmt.executeUpdate();
         }
     }
@@ -29,8 +30,8 @@ public class JdbcPatientRepository implements PatientRepository {
                     return new Patient.Builder()
                             .setId(rs.getInt("id"))
                             .setName(rs.getString("name"))
-
-                            .setPhone(rs.getString("phone"))
+                            .setEmail(rs.getString("email"))
+                            .setPhone(rs.getInt("phone"))
                             .build();
                 }
             }
