@@ -1,9 +1,9 @@
 package db.repositories;
 
-import db.entities.Doctor;
+
 import db.utils.Result;
 
-import java.sql.SQLException;
+
 import java.util.List;
 
 

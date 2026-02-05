@@ -1,6 +1,6 @@
 package db.services;
 import db.entities.Appointment;
-import java.time.LocalDateTime;
+
 
 public class AppointmentFactory {
     // Фабричный метод создает заготовку записи с нужным типом

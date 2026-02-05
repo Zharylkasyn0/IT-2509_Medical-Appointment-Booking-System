@@ -7,7 +7,6 @@ import db.exeption.AppointmentNotFoundException;
 import db.repositories.AppointmentRepository;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -3,14 +3,14 @@ package db.entities;
 public class Patient {
     private int id;
     private String name;
-    private int age;
+
     private String email;
     private int phone; // Теперь это int
 
     private Patient(Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
-        this.age = builder.age;
+
         this.email = builder.email;
         this.phone = builder.phone;
     }
@@ -18,7 +18,7 @@ public class Patient {
     // Геттеры
     public int getId() { return id; }
     public String getName() { return name; }
-    public int getAge() { return age; }
+
     public String getEmail() { return email; } // Добавили геттер
     public int getPhone() { return phone; }    // Добавили геттер
 
@@ -31,7 +31,7 @@ public class Patient {
     public static class Builder {
         private int id;
         private String name;
-        private int age;
+
         private String email;
         private int phone;
 
@@ -45,10 +45,7 @@ public class Patient {
             return this;
         }
 
-        public Builder setAge(int age) {
-            this.age = age;
-            return this;
-        }
+
 
         public Builder setEmail(String email) {
             this.email = email; // ИСПРАВЛЕНО (было this.name = name)
