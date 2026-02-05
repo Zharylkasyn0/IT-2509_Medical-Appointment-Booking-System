@@ -18,6 +18,12 @@ public class Result<T> {
         this.isSuccess = false;
     }
 
+    public Result(boolean isSuccess, T data, String errorMessage) {
+        this.isSuccess = isSuccess;
+        this.data = data;
+        this.errorMessage = errorMessage;
+    }
+
     public T getData() { return data; }
     public String getErrorMessage() { return errorMessage; }
     public boolean isSuccess() { return isSuccess; }

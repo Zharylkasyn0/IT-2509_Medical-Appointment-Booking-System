@@ -22,6 +22,7 @@ public class JdbcAppointmentRepository implements AppointmentRepository {
             stmt.setInt(2, appointment.getPatientId());
             stmt.setTimestamp(3, Timestamp.valueOf(appointment.getAppointmentTime()));
             stmt.setString(4, appointment.getStatus());
+            stmt.setString(5, appointment.getType());
             stmt.executeUpdate();
         }
     }

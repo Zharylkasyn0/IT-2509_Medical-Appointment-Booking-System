@@ -10,9 +10,9 @@ public class DatabaseConnection {
     private Connection connection;
 
     // Параметры подключения (замените на свои)
-    private String url = "jdbc:postgresql://localhost:5432/medical_db";
-    private String user = "postgres";
-    private String password = "password";
+    private String url = "jdbc:postgresql://aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres?sslMode=require";
+    private String user = "postgres.owlrdkwmtgnifqqnijek";
+    private String password = "Zharylkasyn_0";
 
     // 2. Приватный конструктор, чтобы нельзя было создать объект через 'new'
     private DatabaseConnection() throws SQLException {

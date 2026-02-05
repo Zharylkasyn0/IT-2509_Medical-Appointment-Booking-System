@@ -52,28 +52,6 @@ public class JdbcDoctorRepository implements DoctorRepository {
     }
 
     @Override
-    public Result<List<Doctor>> getAll() {
-        try {
-            List<Doctor> doctors = new ArrayList<>();
-            String sql = "SELECT * FROM doctors";
-            try (Connection conn = DatabaseConnection.getInstance().getConnection();
-                 Statement stmt = conn.createStatement();
-                 ResultSet rs = stmt.executeQuery(sql)) {
-                while (rs.next()) {
-                    doctors.add(new Doctor(
-                            rs.getInt("id"),
-                            rs.getString("name"),
-                            rs.getString("specialization")
-                    ));
-                }
-            }
-            return new Result<>(doctors);
-        } catch (SQLException e) {
-            return new Result<>(e.getMessage());
-        }
-    }
-
-    @Override
     public Result<List<Doctor>> findAll() {
         try {
             List<Doctor> doctors = new ArrayList<>();

@@ -16,8 +16,7 @@ public class Patient {
         this.id = builder.id;
     }
 
-    public Collection<Object> getName() {
-    }
+
 
 
     // Статический вложенный класс Builder
@@ -53,4 +52,9 @@ public class Patient {
 
     // Геттеры для полей...
     public String getName() { return name; }
+    public String getPhone() {return phone;}
+    @Override
+    public String toString() {
+        return "Patient{id=" + id + ", name='" + name + "'}";
+    }
 }

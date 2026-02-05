@@ -26,7 +26,7 @@ public class Appointment {
     public int getDoctorId() { return doctorId; }
     public LocalDateTime getAppointmentTime() { return appointmentTime; } // Возвращает дату и время
     public String getStatus() { return status; }
-
+    public String getType() { return type;}
     @Override
     public String toString() {
         return "Appointment{" +
@@ -37,6 +37,8 @@ public class Appointment {
                 ", status='" + status + '\'' +
                 '}';
     }
+
+
 
     // Класс Builder (Строитель)
     public static class AppointmentBuilder {
@@ -75,6 +77,10 @@ public class Appointment {
         public AppointmentBuilder setStatus(String status) {
             this.status = status;
             return this;
+        }
+
+        public String getType() {
+            return type;
         }
 
         public Appointment build() {

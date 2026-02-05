@@ -10,7 +10,6 @@ import db.repositories.PatientRepository;
 import db.services.AppointmentService;
 import db.services.DoctorAvailabilityService;
 import db.entities.Patient;
-import db.services.UserFactory;
 import db.interfaces.IUser;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,35 +55,43 @@ public class Main {
     }
 
     // Демонстрация заданий Milestone 2 (Builder, Lambda, Factory, Singleton)
+    // В файле Main.java
+
     private static void runDemos() {
         System.out.println("\n--- DEMO BLOCK START ---");
 
-        // Builder
+        // --- 1. Сначала создаем список (ЭТОГО НЕ ХВАТАЛО) ---
         Patient p1 = new Patient.Builder().setId(1).setName("Алихан").setPhone("777").build();
         Patient p2 = new Patient.Builder().setId(2).setName("Берик").setPhone("888").build();
+
         List<Patient> patients = new ArrayList<>();
         patients.add(p1);
         patients.add(p2);
 
-        // Lambdas
+        // --- 2. Теперь Lambdas будут работать, так как variable 'patients' существует ---
         String searchName = "Алихан";
         List<Patient> filtered = patients.stream()
                 .filter(p -> p.getName().contains(searchName))
                 .collect(Collectors.toList());
+
         System.out.println("Lambda поиск: " + filtered);
 
-        // Factory
+        // --- 3. Остальные демо (Factory, Singleton) ---
+        System.out.println("Factory Demo (Milestone 2):");
         try {
-            IUser user = UserFactory.createUser("DOCTOR");
-            user.showRole();
+            // Пример создания через Factory
+            db.entities.Appointment app = db.services.AppointmentFactory.createAppointment("ONLINE")
+                    .setId(1)
+                    .setDoctorId(10)
+                    .setPatientId(100)
+                    .setAppointmentTime(java.time.LocalDateTime.now())
+                    .setStatus("NEW")
+                    .build();
+            System.out.println("Created appointment: " + app);
         } catch (Exception e) {
-            System.out.println("Ошибка Factory: " + e.getMessage());
+            System.out.println("Error in demo: " + e.getMessage());
         }
 
-        // Singleton
-        ClinicConfig config = ClinicConfig.getInstance();
-        System.out.println("Singleton ClinicConfig: " + config);
-        System.out.println("Рабочие часы: " + config.getOpeningTime() + " - " + config.getClosingTime());
         System.out.println("--- DEMO BLOCK END ---\n");
     }
 
@@ -173,7 +180,13 @@ public class Main {
 
         LocalDateTime time = LocalDateTime.now().plusDays(1)
                 .withHour(h).withMinute(m).withSecond(0).withNano(0);
-
+        ClinicConfig config = ClinicConfig.getInstance();
+        if (time.toLocalTime().isBefore(config.getOpeningTime()) ||
+                time.toLocalTime().isAfter(config.getClosingTime())) {
+            System.out.println("Ошибка: Клиника закрыта в это время.");
+            System.out.println("Часы работы: " + config.getOpeningTime() + " - " + config.getClosingTime());
+            return;
+        }
         // ИСПРАВЛЕНИЕ: Используем Builder вместо конструктора
         Appointment app = AppointmentFactory.createAppointment(type)
                 .setId(0) // ID генерируется в БД, ставим 0
