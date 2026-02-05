@@ -15,7 +15,7 @@ public class JdbcAppointmentRepository implements AppointmentRepository {
 
     @Override
     public void save(Appointment appointment) throws SQLException {
-        String sql = "INSERT INTO appointments (doctor_id, patient_id, appointment_time, status) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO appointments (doctor_id, patient_id, appointment_time, status,type) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, appointment.getDoctorId());
@@ -82,6 +82,7 @@ public class JdbcAppointmentRepository implements AppointmentRepository {
                 .setPatientId(rs.getInt("patient_id"))
                 .setAppointmentTime(rs.getTimestamp("appointment_time").toLocalDateTime())
                 .setStatus(rs.getString("status"))
+                .setType(rs.getString("type"))
                 .build();
     }
 }

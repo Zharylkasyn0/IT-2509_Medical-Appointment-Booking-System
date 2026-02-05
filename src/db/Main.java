@@ -167,12 +167,15 @@ public class Main {
         System.out.println("Минута (0-59): ");
         int m = scanner.nextInt();
         scanner.nextLine();
+        System.out.println("Выберите тип: 1. Онлайн, 2. Лично");
+        int typeChoice = scanner.nextInt();
+        String type = (typeChoice == 1) ? "ONLINE" : "IN_PERSON";
 
         LocalDateTime time = LocalDateTime.now().plusDays(1)
                 .withHour(h).withMinute(m).withSecond(0).withNano(0);
 
         // ИСПРАВЛЕНИЕ: Используем Builder вместо конструктора
-        Appointment app = new Appointment.AppointmentBuilder()
+        Appointment app = AppointmentFactory.createAppointment(type)
                 .setId(0) // ID генерируется в БД, ставим 0
                 .setDoctorId(dId)
                 .setPatientId(pId)
@@ -226,7 +229,6 @@ public class Main {
         Patient patient = new Patient.Builder()
                 .setId(0)
                 .setName(name)
-                .setEmail(email)
                 .setPhone(phone)
                 .build();
 

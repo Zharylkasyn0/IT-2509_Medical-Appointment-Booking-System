@@ -1,11 +1,16 @@
 package db.services;
+import db.entities.Appointment;
+import java.time.LocalDateTime;
 
 public class AppointmentFactory {
-    public static String createAppointment(String type) {
-        return switch (type.toUpperCase()) {
-            case "ONLINE" -> "Online Appointment Created";
-            case "IN_PERSON" -> "In-Person Appointment Created";
-            default -> throw new IllegalArgumentException("Unknown type");
-        };
+    // Фабричный метод создает заготовку записи с нужным типом
+    public static Appointment.AppointmentBuilder createAppointment(String type) {
+        if (type.equalsIgnoreCase("ONLINE")) {
+            return new Appointment.AppointmentBuilder().setType("Online");
+        } else if (type.equalsIgnoreCase("IN_PERSON")) {
+            return new Appointment.AppointmentBuilder().setType("In-Person");
+        } else {
+            throw new IllegalArgumentException("Unknown appointment type");
+        }
     }
 }

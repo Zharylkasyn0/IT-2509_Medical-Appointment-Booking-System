@@ -3,6 +3,7 @@ package db.entities;
 import java.time.LocalDateTime;
 
 public class Appointment {
+    private String type;
     private int id;
     private int patientId;
     private int doctorId;
@@ -39,11 +40,16 @@ public class Appointment {
 
     // Класс Builder (Строитель)
     public static class AppointmentBuilder {
+        private String type;
         private int id;
         private int patientId;
         private int doctorId;
         private LocalDateTime appointmentTime;
         private String status;
+        public AppointmentBuilder setType(String type){
+            this.type = type;
+            return this;
+        }
 
         public AppointmentBuilder setId(int id) {
             this.id = id;
