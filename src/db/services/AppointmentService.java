@@ -4,6 +4,7 @@ import db.entities.Appointment;
 import db.entities.Doctor;
 import db.entities.Patient;
 import db.exeption.AppointmentException;
+import db.exeption.TimeSlotOccupiedException;
 import db.repositories.AppointmentRepository;
 import db.repositories.DoctorRepository;
 import db.repositories.PatientRepository;
@@ -42,11 +43,11 @@ public class AppointmentService {
     public Result<Boolean> bookAppointment(Appointment app) {
         try {
             if (!availabilityService.isAvailable(app.getDoctorId(), app.getAppointmentTime())) {
-                throw new AppointmentException("This time slot is already booked.");
+                throw new TimeSlotOccupiedException("This time slot is already booked.");
             }
             appointmentRepo.save(app);
             return new Result<>(true);
-        } catch (SQLException | AppointmentException e) {
+        } catch (SQLException | TimeSlotOccupiedException e) {
             return new Result<>(e.getMessage());
         }
     }

@@ -85,4 +85,25 @@ public class JdbcAppointmentRepository implements AppointmentRepository {
                 .setType(rs.getString("type"))
                 .build();
     }
+    // Добавь этот метод в класс
+    public boolean isTimeSlotTaken(int doctorId, java.time.LocalDateTime time) {
+        String sql = "SELECT COUNT(*) FROM appointments WHERE doctor_id = ? AND appointment_time = ?";
+
+        try (java.sql.Connection conn = db.DatabaseConnection.getInstance().getConnection();
+             java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, doctorId);
+            stmt.setObject(2, time); // LocalDateTime отлично работает с setObject
+
+            try (java.sql.ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Если count > 0, значит место занято (return true)
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
