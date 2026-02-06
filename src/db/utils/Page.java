@@ -14,5 +14,5 @@ public class Page<T> {
         this.pageSize = pageSize;
         this.totalElements = totalElements;
     }
-    // Геттеры опущены для краткости
+
 }

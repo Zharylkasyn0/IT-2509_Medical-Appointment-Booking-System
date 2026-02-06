@@ -11,7 +11,7 @@ public class MedicalRecord {
         this.notes = builder.notes;
     }
 
-    // Вот этого кода не хватало внутри класса Builder:
+
     public static class Builder {
         private String diagnosis;
         private String prescription;
@@ -37,7 +37,7 @@ public class MedicalRecord {
         }
     }
 
-    // Геттеры (если нужны для вывода)
+
     @Override
     public String toString() {
         return "MedicalRecord{" +

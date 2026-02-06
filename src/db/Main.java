@@ -34,7 +34,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            // 1. Инициализация (Singleton БД и Репозитории)
+
             DatabaseConnection db = DatabaseConnection.getInstance();
             repo = new JdbcAppointmentRepository();
             DoctorRepository docRepo = new JdbcDoctorRepository();
@@ -42,10 +42,10 @@ public class Main {
             availabilityService = new DoctorAvailabilityService(repo);
             appointmentService = new AppointmentService(repo, availabilityService, docRepo, patRepo);
 
-            // 2. Демонстрация паттернов (Milestone 2) перед запуском меню
+
             runDemos();
 
-            // 3. Запуск основного меню
+
             runMenu();
 
         } catch (Exception e) {
@@ -54,8 +54,7 @@ public class Main {
         }
     }
 
-    // Демонстрация заданий Milestone 2 (Builder, Lambda, Factory, Singleton)
-    // В файле Main.java
+
 
     private static void runDemos() {
         System.out.println("\n--- DEMO BLOCK START ---");
@@ -68,7 +67,7 @@ public class Main {
         patients.add(p1);
         patients.add(p2);
 
-        // --- 2. Теперь Lambdas будут работать, так как variable 'patients' существует ---
+
         String searchName = "Алихан";
         List<Patient> filtered = patients.stream()
                 .filter(p -> p.getName().contains(searchName))
@@ -76,10 +75,10 @@ public class Main {
 
         System.out.println("Lambda поиск: " + filtered);
 
-        // --- 3. Остальные демо (Factory, Singleton) ---
+
         System.out.println("Factory Demo (Milestone 2):");
         try {
-            // Пример создания через Factory
+            
             db.entities.Appointment app = db.services.AppointmentFactory.createAppointment("ONLINE")
                     .setId(1)
                     .setDoctorId(10)
@@ -114,7 +113,7 @@ public class Main {
             }
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Очистка буфера
+            scanner.nextLine();
 
             try {
                 switch (choice) {
@@ -187,7 +186,7 @@ public class Main {
             System.out.println("Часы работы: " + config.getOpeningTime() + " - " + config.getClosingTime());
             return;
         }
-        // ИСПРАВЛЕНИЕ: Используем Builder вместо конструктора
+
         Appointment app = AppointmentFactory.createAppointment(type)
                 .setId(0) // ID генерируется в БД, ставим 0
                 .setDoctorId(dId)
@@ -222,7 +221,7 @@ public class Main {
         String name = scanner.nextLine();
         System.out.print("Специализация: ");
         String spec = scanner.nextLine();
-        // У Doctor обычный конструктор, оставляем как есть
+
         Result<Boolean> result = appointmentService.addDoctor(new Doctor(0, name, spec));
         if (result.isSuccess()) {
             System.out.println("Доктор добавлен!");

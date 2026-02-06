@@ -3,7 +3,7 @@ import db.entities.Appointment;
 
 
 public class AppointmentFactory {
-    // Фабричный метод создает заготовку записи с нужным типом
+
     public static Appointment.AppointmentBuilder createAppointment(String type) {
         if (type.equalsIgnoreCase("ONLINE")) {
             return new Appointment.AppointmentBuilder().setType("Online");

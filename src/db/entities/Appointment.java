@@ -7,11 +7,11 @@ public class Appointment {
     private int id;
     private int patientId;
     private int doctorId;
-    // ИСПРАВЛЕНИЕ: Используем один LocalDateTime вместо двух String
+
     private LocalDateTime appointmentTime;
     private String status;
 
-    // Приватный конструктор для Билдера
+
     public Appointment(AppointmentBuilder builder) {
         this.id = builder.id;
         this.patientId = builder.patientId;
@@ -40,7 +40,7 @@ public class Appointment {
 
 
 
-    // Класс Builder (Строитель)
+
     public static class AppointmentBuilder {
         private String type;
         private int id;
@@ -68,7 +68,7 @@ public class Appointment {
             return this;
         }
 
-        // Этот метод теперь принимает правильный тип LocalDateTime
+
         public AppointmentBuilder setAppointmentTime(LocalDateTime appointmentTime) {
             this.appointmentTime = appointmentTime;
             return this;

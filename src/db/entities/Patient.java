@@ -5,7 +5,7 @@ public class Patient {
     private String name;
 
     private String email;
-    private int phone; // Теперь это int
+    private int phone;
 
     private Patient(Builder builder) {
         this.id = builder.id;
@@ -19,15 +19,15 @@ public class Patient {
     public int getId() { return id; }
     public String getName() { return name; }
 
-    public String getEmail() { return email; } // Добавили геттер
-    public int getPhone() { return phone; }    // Добавили геттер
+    public String getEmail() { return email; }
+    public int getPhone() { return phone; }
 
     @Override
     public String toString() {
         return "Patient{id=" + id + ", name='" + name + "', phone=" + phone + "}";
     }
 
-    // Builder
+
     public static class Builder {
         private int id;
         private String name;
@@ -48,7 +48,7 @@ public class Patient {
 
 
         public Builder setEmail(String email) {
-            this.email = email; // ИСПРАВЛЕНО (было this.name = name)
+            this.email = email;
             return this;
         }
 
