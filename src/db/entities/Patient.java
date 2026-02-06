@@ -3,14 +3,12 @@ package db.entities;
 public class Patient {
     private int id;
     private String name;
-
     private String email;
     private int phone;
 
     private Patient(Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
-
         this.email = builder.email;
         this.phone = builder.phone;
     }

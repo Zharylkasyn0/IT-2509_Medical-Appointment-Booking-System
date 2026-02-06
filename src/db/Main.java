@@ -59,7 +59,7 @@ public class Main {
     private static void runDemos() {
         System.out.println("\n--- DEMO BLOCK START ---");
 
-        // --- 1. Сначала создаем список (ЭТОГО НЕ ХВАТАЛО) ---
+
         Patient p1 = new Patient.Builder().setId(1).setName("Алихан").setPhone(777).build();
         Patient p2 = new Patient.Builder().setId(2).setName("Берик").setPhone(888).build();
 
