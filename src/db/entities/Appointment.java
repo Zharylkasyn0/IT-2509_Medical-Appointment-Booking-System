@@ -3,13 +3,13 @@ package db.entities;
 import java.time.LocalDateTime;
 
 public class Appointment {
-    private String type;
-    private int id;
-    private int patientId;
-    private int doctorId;
+    private final String type;
+    private final int id;
+    private final int patientId;
+    private final int doctorId;
 
-    private LocalDateTime appointmentTime;
-    private String status;
+    private final LocalDateTime appointmentTime;
+    private final String status;
 
 
     public Appointment(AppointmentBuilder builder) {
@@ -18,6 +18,7 @@ public class Appointment {
         this.doctorId = builder.doctorId;
         this.appointmentTime = builder.appointmentTime;
         this.status = builder.status;
+        this.type = builder.type;
     }
 
     // Геттеры

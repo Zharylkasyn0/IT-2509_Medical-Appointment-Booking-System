@@ -188,7 +188,7 @@ public class Main {
         }
 
         Appointment app = AppointmentFactory.createAppointment(type)
-                .setId(0) // ID генерируется в БД, ставим 0
+                .setId(0)
                 .setDoctorId(dId)
                 .setPatientId(pId)
                 .setAppointmentTime(time)

@@ -7,12 +7,12 @@ import java.sql.SQLException;
 public class DatabaseConnection {
 
     private static DatabaseConnection instance;
-    private Connection connection;
+    private final Connection connection;
 
 
-    private String url = "jdbc:postgresql://aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres?sslMode=require";
-    private String user = "postgres.owlrdkwmtgnifqqnijek";
-    private String password = "Zharylkasyn_0";
+    private final String url = "jdbc:postgresql://aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres?sslMode=require";
+    private final String user = "postgres.owlrdkwmtgnifqqnijek";
+    private final String password = "Zharylkasyn_0";
 
 
     private DatabaseConnection() throws SQLException {

@@ -33,10 +33,10 @@ public class JdbcPatientRepository implements PatientRepository {
                             .setEmail(rs.getString("email"))
                             .setPhone(rs.getInt("phone"))
                             .build();
-                }
+                } else {return null;}
             }
         }
-        return null;
+
     }
 
 }

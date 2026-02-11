@@ -2,18 +2,20 @@ package db.utils;
 
 
 public class Result<T> {
-    private T data;
-    private String errorMessage;
-    private boolean isSuccess;
+    private final T data;
+    private final String errorMessage;
+    private final boolean isSuccess;
 
 
     public Result(T data) {
         this.data = data;
+        this.errorMessage = null;
         this.isSuccess = true;
     }
 
 
     public Result(String errorMessage) {
+        this.data = null;
         this.errorMessage = errorMessage;
         this.isSuccess = false;
     }

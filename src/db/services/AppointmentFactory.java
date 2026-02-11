@@ -10,7 +10,7 @@ public class AppointmentFactory {
         } else if (type.equalsIgnoreCase("IN_PERSON")) {
             return new Appointment.AppointmentBuilder().setType("In-Person");
         } else {
-            throw new IllegalArgumentException("Unknown appointment type");
+            throw new IllegalArgumentException("Unknown appointment type" + type);
         }
     }
 }

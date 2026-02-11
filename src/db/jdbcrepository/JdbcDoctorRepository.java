@@ -28,7 +28,7 @@ public class JdbcDoctorRepository implements DoctorRepository {
 
     @Override
     public Result<Boolean> delete(int id) {
-        return null;
+        throw new UnsupportedOperationException("Delete not implemented");
     }
 
     @Override
