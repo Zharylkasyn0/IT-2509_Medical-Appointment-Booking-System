@@ -60,8 +60,8 @@ public class Main {
         System.out.println("\n--- DEMO BLOCK START ---");
 
 
-        Patient p1 = new Patient.Builder().setId(1).setName("Алихан").setPhone(777).build();
-        Patient p2 = new Patient.Builder().setId(2).setName("Берик").setPhone(888).build();
+        Patient p1 = new Patient.Builder().setId(1).setName("Алихан").setPhone("777").build();
+        Patient p2 = new Patient.Builder().setId(2).setName("Берик").setPhone("888").build();
 
         List<Patient> patients = new ArrayList<>();
         patients.add(p1);
@@ -236,15 +236,8 @@ public class Main {
         System.out.print("Email: ");
         String email = scanner.nextLine();
         System.out.print("Телефон: ");
-        String phoneStr = scanner.nextLine();
+        String phone = scanner.nextLine();
 
-        int phone;
-        try {
-            phone = Integer.parseInt(phoneStr);
-        } catch (NumberFormatException e) {
-            System.out.println("Ошибка: Телефон должен содержать только цифры! Установлен 0.");
-            phone = 0;
-        }
 
         Patient patient = new Patient.Builder()
                 .setId(0)

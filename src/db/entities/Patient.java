@@ -1,10 +1,10 @@
 package db.entities;
 
 public class Patient {
-    private int id;
-    private String name;
-    private String email;
-    private int phone;
+    private final int id;
+    private final String name;
+    private final String email;
+    private final String phone;
 
     private Patient(Builder builder) {
         this.id = builder.id;
@@ -18,7 +18,7 @@ public class Patient {
     public String getName() { return name; }
 
     public String getEmail() { return email; }
-    public int getPhone() { return phone; }
+    public String getPhone() { return phone; }
 
     @Override
     public String toString() {
@@ -31,7 +31,7 @@ public class Patient {
         private String name;
 
         private String email;
-        private int phone;
+        private String phone;
 
         public Builder setId(int id) {
             this.id = id;
@@ -50,7 +50,7 @@ public class Patient {
             return this;
         }
 
-        public Builder setPhone(int phone) {
+        public Builder setPhone(String phone) {
             this.phone = phone;
             return this;
         }
