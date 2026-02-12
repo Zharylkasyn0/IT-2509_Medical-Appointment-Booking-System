@@ -1,9 +1,8 @@
 package db.repositories;
 
 import db.entities.Patient;
-import java.sql.SQLException;
+import db.utils.Result;
 
-public interface PatientRepository {
-    Patient findById(int id) throws SQLException;
-    void save(Patient patient) throws SQLException;
+public interface PatientRepository extends IRepository<Patient> {
+    // специфичные методы для Patient можно добавить позже
 }

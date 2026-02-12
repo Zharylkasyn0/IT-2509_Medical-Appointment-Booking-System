@@ -136,21 +136,28 @@ public class Main {
         System.out.println("Введите ID врача: ");
         int docId = scanner.nextInt();
         scanner.nextLine();
-        List<Appointment> list = repo.findByDoctorId(docId);
-        if (list.isEmpty()) {
-            System.out.println("Записей нет.");
-        } else {
-            for (Appointment app : list) {
-                System.out.println("ID записи: " + app.getId() + " | Статус: " + app.getStatus() + " | Время: " + app.getAppointmentTime());
+        Result<List<Appointment>> result = repo.findByDoctorId(docId);
+        if (result.isSuccess()) {
+            List<Appointment> list = result.getData();
+            if (list.isEmpty()) {
+                System.out.println("Записей нет.");
+            } else {
+                for (Appointment app : list) {
+                    System.out.println("ID записи: " + app.getId() + " | Статус: " + app.getStatus() + " | Время: " + app.getAppointmentTime());
+                }
             }
+        }else { System.out.println("Ошибка: " + result.getErrorMessage());
+
         }
     }
 
-    private static void showPatientAppointments() throws SQLException {
+    private static void showPatientAppointments()  {
         System.out.println("Введите ID пациента: ");
         int patientId = scanner.nextInt();
         scanner.nextLine();
-        List<Appointment> list = repo.findByPatientId(patientId);
+        Result<List<Appointment>>result =repo.findByPatientId(patientId);
+        if(result.isSuccess()){
+        List<Appointment> list = result.getData();
         if (list.isEmpty()) {
             System.out.println("Записей нет.");
         } else {
@@ -160,6 +167,10 @@ public class Main {
                         " | Статус: " + app.getStatus() +
                         " | Время: " + app.getAppointmentTime());
             }
+        }
+        }else{
+                System.out.println("Ошибка: " + result.getErrorMessage());
+
         }
     }
 
@@ -231,11 +242,11 @@ public class Main {
     }
 
     private static void addNewPatient() {
-        System.out.print("Имя пациента: ");
+        System.out.println("Имя пациента: ");
         String name = scanner.nextLine();
-        System.out.print("Email: ");
+        System.out.println("Email: ");
         String email = scanner.nextLine();
-        System.out.print("Телефон: ");
+        System.out.println("Телефон: ");
         String phone = scanner.nextLine();
 
 
@@ -247,7 +258,7 @@ public class Main {
                 .build();
 
         Result<Boolean> result = appointmentService.addPatient(patient);
-        if (result.isSuccess()) {
+        if (result.isSuccess()&& result.getData()) {
             System.out.println("Пациент добавлен!");
         } else {
             System.out.println("Ошибка: " + result.getErrorMessage());

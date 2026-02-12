@@ -3,13 +3,13 @@ package db.services;
 import db.entities.Appointment;
 import db.entities.Doctor;
 import db.entities.Patient;
-import db.exeption.AppointmentException;
-import db.exeption.TimeSlotOccupiedException;
+
+
 import db.repositories.AppointmentRepository;
 import db.repositories.DoctorRepository;
 import db.repositories.PatientRepository;
 import db.utils.Result;
-import java.sql.SQLException;
+
 
 public class AppointmentService {
     private final AppointmentRepository appointmentRepo;
@@ -32,32 +32,18 @@ public class AppointmentService {
     }
 
     public Result<Boolean> addPatient(Patient patient) {
-        try {
-            patientRepo.save(patient);
-            return new Result<>(true);
-        } catch (SQLException e) {
-            return new Result<>(e.getMessage());
-        }
+        return patientRepo.save(patient);
     }
 
     public Result<Boolean> bookAppointment(Appointment app) {
-        try {
-            if (!availabilityService.isAvailable(app.getDoctorId(), app.getAppointmentTime())) {
-                throw new TimeSlotOccupiedException("This time slot is already booked.");
-            }
-            appointmentRepo.save(app);
-            return new Result<>(true);
-        } catch (SQLException | TimeSlotOccupiedException e) {
-            return new Result<>(e.getMessage());
+        Result<Boolean> availabilityResult = availabilityService.isAvailable(app.getDoctorId(), app.getAppointmentTime());
+        if (!availabilityResult.isSuccess() || !availabilityResult.getData()) {
+            return new Result<>("Time slot is not available");
         }
+        return appointmentRepo.save(app);
     }
 
     public Result<Boolean> cancelAppointment(int appointmentId) {
-        try {
-            appointmentRepo.updateStatus(appointmentId, "CANCELLED");
-            return new Result<>(true);
-        } catch (SQLException | AppointmentException e) {
-            return new Result<>(e.getMessage());
-        }
+        return appointmentRepo.updateStatus(appointmentId, "CANCELLED");
     }
 }

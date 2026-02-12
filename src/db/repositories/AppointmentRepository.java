@@ -1,13 +1,12 @@
 package db.repositories;
-import db.entities.Appointment;
-import db.exeption.AppointmentException;
 
-import java.sql.SQLException;
+import db.entities.Appointment;
+import db.utils.Result;
+
 import java.util.List;
 
-public interface AppointmentRepository {
-    void save(Appointment appointment) throws SQLException;
-    void updateStatus(int appointmentId, String status) throws SQLException,AppointmentException ;
-    List<Appointment> findByDoctorId(int doctorId) throws SQLException ;
-    List<Appointment> findByPatientId(int patientId) throws SQLException;
+public interface AppointmentRepository extends IRepository<Appointment> {
+    Result<List<Appointment>> findByDoctorId(int doctorId);
+    Result<List<Appointment>> findByPatientId(int patientId);
+    Result<Boolean> updateStatus(int appointmentId, String status);
 }
