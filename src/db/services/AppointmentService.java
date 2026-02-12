@@ -68,7 +68,7 @@ public class AppointmentService {
 
         Map<String, Long> byDoctor = appointments.stream()
                 .collect(Collectors.groupingBy(
-                        app -> "Dr. " + app.getDoctorId(), // просто для читаемости
+                        app -> "Dr. " + app.getDoctorId(),
                         Collectors.counting()
                 ));
 
