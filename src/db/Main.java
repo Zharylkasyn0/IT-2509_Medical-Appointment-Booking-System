@@ -1,6 +1,7 @@
 package db;
 
 import db.ClinicConfig;
+import db.dto.AppointmentReport;
 import db.jdbcrepository.JdbcAppointmentRepository;
 import db.jdbcrepository.JdbcDoctorRepository;
 import db.jdbcrepository.JdbcPatientRepository;
@@ -103,7 +104,8 @@ public class Main {
             System.out.println("4. Добавить нового врача");
             System.out.println("5. Зарегистрировать пациента");
             System.out.println("6. Показать записи пациента");
-            System.out.println("7. Выход");
+            System.out.println("7. Показать отчет по записям");
+            System.out.println("8. Выход");
             System.out.println("Выбери пункт: ");
 
             if (!scanner.hasNextInt()) {
@@ -123,12 +125,31 @@ public class Main {
                     case 4 -> addNewDoctor();
                     case 5 -> addNewPatient();
                     case 6 -> showPatientAppointments();
-                    case 7 -> { System.out.println("Выход..."); return; }
+                    case 7 -> showReport();
+                    case 8 -> { System.out.println("Выход..."); return; }
                     default -> System.out.println("Неверный выбор.");
                 }
             } catch (Exception e) {
                 System.out.println("\n>>> ОШИБКА: " + e.getMessage());
             }
+        }
+    }
+    private static void showReport() {
+        System.out.println("\n--- ОТЧЁТ ПО ЗАПИСЯМ ---");
+        Result<AppointmentReport> result = appointmentService.generateReport();
+        if (result.isSuccess()) {
+            AppointmentReport report = result.getData();
+            System.out.println("Клиника: " + report.getClinicName());
+            System.out.println("\nЗаписи по статусам:");
+            report.getCountByStatus().forEach((status, count) ->
+                    System.out.println("  " + status + ": " + count)
+            );
+            System.out.println("\nЗаписи по врачам:");
+            report.getCountByDoctor().forEach((doctor, count) ->
+                    System.out.println("  " + doctor + ": " + count)
+            );
+        } else {
+            System.out.println("Ошибка формирования отчёта: " + result.getErrorMessage());
         }
     }
 
