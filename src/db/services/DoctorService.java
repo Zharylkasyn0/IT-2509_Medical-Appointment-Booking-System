@@ -17,7 +17,7 @@ public class DoctorService {
 
     public Result<List<Doctor>> getDoctorsBySpecialization(String specialization) {
 
-        Result<List<Doctor>> result = doctorRepository.findAll();
+        Result<List<Doctor>> result = doctorRepository .findAll();
 
         if (result.isSuccess()) {
 
