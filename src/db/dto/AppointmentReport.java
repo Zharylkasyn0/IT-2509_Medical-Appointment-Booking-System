@@ -13,7 +13,7 @@ public class AppointmentReport {
         this.countByDoctor = builder.countByDoctor;
     }
 
-    // геттеры
+
     public String getClinicName() { return clinicName; }
     public Map<String, Long> getCountByStatus() { return countByStatus; }
     public Map<String, Long> getCountByDoctor() { return countByDoctor; }

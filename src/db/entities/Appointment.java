@@ -21,7 +21,7 @@ public class Appointment {
         this.type = builder.type;
     }
 
-    // Геттеры
+
     public int getId() { return id; }
     public int getPatientId() { return patientId; }
     public int getDoctorId() { return doctorId; }
